@@ -1,6 +1,6 @@
 # Laravel 5 Follow System
 
-This package helps you to add user based follow system to your model.
+:two_men_holding_hands: This package helps you to add user based follow system to your model.
 
 ## Installation
 
