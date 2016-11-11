@@ -1,0 +1,29 @@
+{
+    "name": "overtrue/follow",
+    "description": "Laravel 5 User Based System",
+    "require": {
+        "php": ">=5.4",
+        "laravel/laravel": "^5.1",
+        "laravel/framework": "^5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^3.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "overtrue",
+            "email": "i@overtrue.me"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Overtrue\\LaravelFollow\\": "src/"
+        }
+    },
+    "autoload-dev": {
+      "psr-4": {
+          "Overtrue\\LaravelFollow\\Test\\": "tests"
+      }
+    }
+}
