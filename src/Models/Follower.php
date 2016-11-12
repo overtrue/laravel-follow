@@ -13,6 +13,9 @@ namespace Overtrue\LaravelFollow\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Follower.
+ */
 class Follower extends Model
 {
     //

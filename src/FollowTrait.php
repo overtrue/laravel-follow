@@ -11,34 +11,33 @@
 
 namespace Overtrue\LaravelFollow;
 
+/**
+ * Trait FollowTrait.
+ */
 trait FollowTrait
 {
     /**
-     * Follow a user.
+     * Follow a user or users.
      *
      * @param int|array $user
+     *
+     * @return int
      */
     public function follow($user)
     {
-        if (!is_array($user)) {
-            $user = compact('user');
-        }
-
-        $this->followings()->sync($user, false);
+        return $this->followings()->sync((array)$user, false);
     }
 
     /**
-     * Unfollow a user.
+     * Unfollow a user or users.
      *
-     * @param $user
+     * @param int|array $user
+     *
+     * @return int
      */
     public function unfollow($user)
     {
-        if (!is_array($user)) {
-            $user = compact('user');
-        }
-
-        $this->followings()->detach($user);
+        return $this->followings()->detach((array)$user);
     }
 
     /**
@@ -46,7 +45,7 @@ trait FollowTrait
      *
      * @param $user
      *
-     * @return mixed
+     * @return bool
      */
     public function isFollowing($user)
     {
@@ -58,7 +57,7 @@ trait FollowTrait
      *
      * @param $user
      *
-     * @return mixed
+     * @return bool
      */
     public function isFollowedBy($user)
     {
@@ -66,9 +65,9 @@ trait FollowTrait
     }
 
     /**
-     * Followers relationship.
+     * Return user followers.
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function followers()
     {
@@ -76,9 +75,9 @@ trait FollowTrait
     }
 
     /**
-     * Followings relationship.
+     * Return user following users.
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function followings()
     {
