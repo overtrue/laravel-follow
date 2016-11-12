@@ -31,44 +31,44 @@ use Overtrue\LaravelFollow\FollowTrait;
 
 class User extends Model
 {
-  use FollowTrait;
+    use FollowTrait;
 }
 ```
 
 ## Usage
 
-### Follow User
+### Follow a user or users.
 
 ```php
 $user->follow(1)
 $user->follow([1,2,3,4])
 ```
 
-### Unfollow User
+### Unfollow a user or users.
 
 ```php
 $user->unfollow(1)
 $user->unfollow([1,2,3,4])
 ```
 
-### Get Followers
+### Get user followers
 
 ```php
 $user->followers()
 ```
 
-### Get Followings
+### Get user followings
 
 ```php
 $user->followings()
 ```
 
-### Check if Follow
+### Check if follow
 ```
 $user->isFollowing(1)
 ```
 
-### Check if Followed By
+### Check if followed by
 
 ```php
 $user->isFollowedBy(1)
