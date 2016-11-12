@@ -2,12 +2,14 @@
 
 :heart: This package helps you to add user based follow system to your model.
 
+> this repo is forked from mohd-isa/follow(deleted).
+
 ## Installation
 
 You can install the package using composer
 
 ```sh
-$ composer require overtrue/follow -vvv
+$ composer require overtrue/laravel-follow -vvv
 ```
 
 Then add the service provider to `config/app.php`
