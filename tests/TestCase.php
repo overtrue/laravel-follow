@@ -60,16 +60,12 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     public function seed($classname = null)
     {
-        UserTest::create([
-            'name' => 'John'
-        ]);
+        User::create([ 'name' => 'John' ]);
+        User::create([ 'name' => 'Allison' ]);
+        User::create([ 'name' => 'Ron' ]);
 
-        UserTest::create([
-            'name' => 'Allison'
-        ]);
-
-        UserTest::create([
-            'name' => 'Ron'
-        ]);
+        Other::create([ 'name' => 'Laravel' ]);
+        Other::create([ 'name' => 'Vuejs' ]);
+        Other::create([ 'name' => 'Ruby' ]);
     }
 }

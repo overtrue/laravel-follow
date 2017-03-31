@@ -16,71 +16,76 @@ namespace Overtrue\LaravelFollow;
  */
 trait FollowTrait
 {
+    protected $class = __CLASS__;
+
     /**
-     * Follow a user or users.
+     * Follow a item or items.
      *
-     * @param int|array $user
+     * @param int|array|\Illuminate\Database\Eloquent\Model $item
      *
      * @return int
      */
-    public function follow($user)
+    public function follow($item)
     {
-        return $this->followings()->sync((array)$user, false);
+        $item = $this->checkItem($item);
+
+        return $this->followings($this->class)->sync((array)$item, false);
     }
 
     /**
-     * Unfollow a user or users.
+     * Unfollow a item or items.
      *
-     * @param int|array $user
+     * @param int|array|\Illuminate\Database\Eloquent\Model $item
      *
      * @return int
      */
-    public function unfollow($user)
+    public function unfollow($item)
     {
-        return $this->followings()->detach((array)$user);
+        $item = $this->checkItem($item);
+
+        return $this->followings($this->class)->detach((array)$item);
     }
 
     /**
-     * Check if user is following given user.
+     * Check if user is following given item.
      *
-     * @param $user
+     * @param $item
      *
      * @return bool
      */
-    public function isFollowing($user)
+    public function isFollowing($item)
     {
-        return $this->followings->contains($user);
+        $item = $this->checkItem($item);
+
+        return $this->followings($this->class)->get()->contains($item);
     }
 
     /**
-     * Check if user is followed by given user.
-     *
-     * @param $user
-     *
-     * @return bool
-     */
-    public function isFollowedBy($user)
-    {
-        return $this->followers->contains($user);
-    }
-
-    /**
-     * Return user followers.
+     * Return item followings.
+     * 
+     * @param class $class
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function followers()
+    public function followings($class = __CLASS__)
     {
-        return $this->belongsToMany(__CLASS__, 'followers', 'follow_id', 'user_id');
+        return $this->morphedByMany($class, 'followable', 'followers');
     }
 
     /**
-     * Return user following users.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * Determine whether $item is an instantiated object of \Illuminate\Database\Eloquent\Model
+     * 
+     * @param $item
+     * 
+     * @return int
      */
-    public function followings()
+    protected function checkItem($item)
     {
-        return $this->belongsToMany(__CLASS__, 'followers', 'user_id', 'follow_id');
+        if ($item instanceof \Illuminate\Database\Eloquent\Model) {
+            $this->class = get_class($item);
+            return $item->id;
+        };
+
+        return $item;
     }
 }
