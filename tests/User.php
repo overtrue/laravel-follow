@@ -3,10 +3,11 @@ namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Database\Eloquent\Model;
 use Overtrue\LaravelFollow\FollowTrait;
+use Overtrue\LaravelFollow\FollowerTrait;
 
-class UserTest extends Model
+class User extends Model
 {
-    use FollowTrait;
+    use FollowTrait, FollowerTrait;
 
     protected $table = 'users';
 

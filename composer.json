@@ -2,11 +2,11 @@
     "name": "overtrue/laravel-follow",
     "description": "Laravel 5 User Based System",
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.5.9"
     },
     "require-dev": {
-        "laravel/framework": "~5.1",
-        "phpunit/phpunit": "^3.0"
+        "laravel/laravel": "5.1.*",
+        "phpunit/phpunit": "~5.0"
     },
     "license": "MIT",
     "authors": [
