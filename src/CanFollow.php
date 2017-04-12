@@ -12,9 +12,9 @@
 namespace Overtrue\LaravelFollow;
 
 /**
- * Trait FollowTrait.
+ * Trait CanFollow.
  */
-trait FollowTrait
+trait CanFollow
 {
     protected $class = __CLASS__;
 
