@@ -2,11 +2,11 @@
 namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Database\Eloquent\Model;
-use Overtrue\LaravelFollow\FollowerTrait;
+use Overtrue\LaravelFollow\CanBeFollowed;
 
 class Other extends Model
 {
-    use FollowerTrait;
+    use CanBeFollowed;
 
     protected $follow = User::class;
 

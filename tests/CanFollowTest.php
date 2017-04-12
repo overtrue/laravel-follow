@@ -3,7 +3,7 @@ namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class FollowTraitTest extends TestCase
+class CanFollowTest extends TestCase
 {
     public function test_user_can_follow_by_id()
     {

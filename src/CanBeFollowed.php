@@ -12,9 +12,9 @@
 namespace Overtrue\LaravelFollow;
 
 /**
- * Trait FollowerTrait.
+ * Trait CanBeFollowed.
  */
-trait FollowerTrait
+trait CanBeFollowed
 {
     /**
      * Check if user is followed by given user.
