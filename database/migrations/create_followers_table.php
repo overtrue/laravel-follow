@@ -17,6 +17,11 @@ class CreateFollowersTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('follow_id');
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -27,6 +32,9 @@ class CreateFollowersTable extends Migration
      */
     public function down()
     {
+        Schema::table('followers', function ($table) {
+            $table->dropForeign('followers_user_id_foreign');
+        });
         Schema::drop('followers');
     }
 }
