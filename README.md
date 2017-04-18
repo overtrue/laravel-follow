@@ -24,7 +24,13 @@ Publish the migrations file:
 $ php artisan vendor:publish --provider="Overtrue\LaravelFollow\FollowServiceProvider" --tag="migrations"
 ```
 
-Finally, use CanFollow and CanBeFollowed in User model
+And create tables:
+
+```php
+$ php artisan migrate
+```
+
+Finally, use `CanFollow` and `CanBeFollowed` in User model:
 
 ```php
 use Overtrue\LaravelFollow\CanFollow;
