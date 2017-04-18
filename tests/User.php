@@ -2,11 +2,12 @@
 namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Database\Eloquent\Model;
-use Overtrue\LaravelFollow\FollowTrait;
+use Overtrue\LaravelFollow\CanFollow;
+use Overtrue\LaravelFollow\CanBeFollowed;
 
-class UserTest extends Model
+class User extends Model
 {
-    use FollowTrait;
+    use CanFollow, CanBeFollowed;
 
     protected $table = 'users';
 

@@ -24,14 +24,15 @@ Publish the migrations file:
 $ php artisan vendor:publish --provider="Overtrue\LaravelFollow\FollowServiceProvider" --tag="migrations"
 ```
 
-Finally, use FollowTrait in User model
+Finally, use CanFollow and CanBeFollowed in User model
 
 ```php
-use Overtrue\LaravelFollow\FollowTrait;
+use Overtrue\LaravelFollow\CanFollow;
+use Overtrue\LaravelFollow\CanBeFollowed;
 
 class User extends Model
 {
-    use FollowTrait;
+    use CanFollow, CanBeFollowed;
 }
 ```
 
