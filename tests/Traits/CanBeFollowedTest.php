@@ -1,7 +1,7 @@
 <?php
 namespace Overtrue\LaravelFollow\Test;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 class CanBeFollowedTest extends TestCase
 {

@@ -20,8 +20,17 @@ class FollowServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $root = dirname(__DIR__);
+
         $this->publishes([
-            __DIR__.'/../database/migrations/create_followers_table.php' => database_path('migrations/'.date('Y_m_d_His').'_create_followers_table.php'),
+            $root.'/config/follow.php' => config_path('follow.php'),
+        ], 'config');
+
+
+        $datePrefix = date('Y_m_d_His');
+        $this->publishes([
+            $root.'/database/migrations/create_laravel_follow_tables.php'
+                => database_path("/migrations/{$datePrefix}_create_laravel_follow_tables.php"),
         ], 'migrations');
     }
 
@@ -30,6 +39,6 @@ class FollowServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(dirname(__DIR__).'/config/follow.php', 'follow');
     }
 }

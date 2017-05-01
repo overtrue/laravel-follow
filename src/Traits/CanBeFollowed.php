@@ -3,13 +3,16 @@
 /*
  * This file is part of the overtrue/laravel-follow.
  *
- * (c) Jiajian Chan <changejian@gmail.com>
+ * (c) overtrue <i@overtrue.me>
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
 
-namespace Overtrue\LaravelFollow;
+
+namespace Overtrue\LaravelFollow\Traits;
+
+use Overtrue\LaravelFollow\Follow;
 
 /**
  * Trait CanBeFollowed.
@@ -19,13 +22,13 @@ trait CanBeFollowed
     /**
      * Check if user is followed by given user.
      *
-     * @param $user
+     * @param integer $user
      *
      * @return bool
      */
     public function isFollowedBy($user)
     {
-        return $this->followers->contains($user);
+        return Follow::isRelationExists($this, 'followers', $user, Follow::RELATION_FOLLOW);
     }
 
     /**
@@ -35,16 +38,7 @@ trait CanBeFollowed
      */
     public function followers()
     {
-        return $this->morphToMany($this->getProperty(), 'followable', 'followers');
-    }
-
-    /**
-     * Return user following items.
-     *
-     * @return string
-     */
-    protected function getProperty()
-    {
-        return property_exists($this, 'follow') ? $this->follow : __CLASS__;
+        return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
+                    ->where('relation', Follow::RELATION_FOLLOW);
     }
 }

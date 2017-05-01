@@ -3,9 +3,15 @@ namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Filesystem\ClassFinder;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
+    use DatabaseTransactions;
+
+    protected $config;
+
     /**
      * Creates the application.
      *
@@ -30,6 +36,12 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     {
         parent::setUp();
 
+        if (empty($this->config)) {
+            $this->config = require (__DIR__.'/../config/follow.php');
+        }
+
+        $this->app['config']->set('follow', $this->config);
+        $this->app['config']->set('follow.user_model', User::class);
         $this->app['config']->set('database.default', 'sqlite');
         $this->app['config']->set('database.connections.sqlite.database', ':memory:');
 
@@ -47,12 +59,23 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $fileSystem = new Filesystem();
         $classFinder = new ClassFinder();
 
+        $fileSystem->copy(
+            __DIR__ . '/../database/migrations/create_laravel_follow_tables.php',
+            __DIR__ . "/../tests/database/migrations/create_laravel_follow_tables.php"
+        );
+
         foreach ($fileSystem->files(__DIR__ . "/../tests/database/migrations") as $file) {
             $fileSystem->requireOnce($file);
             $migrationClass = $classFinder->findClass($file);
 
             (new $migrationClass)->up();
         }
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        unlink(__DIR__ . "/../tests/database/migrations/create_laravel_follow_tables.php");
     }
 
     /**

@@ -2,7 +2,7 @@
 namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Database\Eloquent\Model;
-use Overtrue\LaravelFollow\CanBeFollowed;
+use Overtrue\LaravelFollow\Traits\CanBeFollowed;
 
 class Other extends Model
 {
