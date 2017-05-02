@@ -29,13 +29,13 @@ Overtrue\LaravelFollow\FollowServiceProvider::class
 Publish the migrations file:
 
 ```sh
-$ php artisan vendor:publish --provider="Overtrue\LaravelFollow\FollowServiceProvider" --tag="migrations"
+$ php artisan vendor:publish --provider='Overtrue\LaravelFollow\FollowServiceProvider' --tag="migrations"
 ```
 
 As optional if you want to modify the default configuration, you can publish the configuration file:
  
 ```sh
-$ php artisan vendor:publish --provider="Overtrue\LaravelFollow\FollowServiceProvider" --tag="config"
+$ php artisan vendor:publish --provider='Overtrue\LaravelFollow\FollowServiceProvider' --tag="config"
 ```
 
 And create tables:
