@@ -4,6 +4,14 @@
 
 > this repo is forked from mohd-isa/follow(deleted).
 
+## Features
+
+- Support actions:
+    - Follow
+    - Like
+    - Subscribe
+    - Favorite
+
 ## Installation
 
 You can install the package using composer
@@ -24,13 +32,19 @@ Publish the migrations file:
 $ php artisan vendor:publish --provider="Overtrue\LaravelFollow\FollowServiceProvider" --tag="migrations"
 ```
 
+As optional if you want to modify the default configuration, you can publish the configuration file:
+ 
+```sh
+$ php artisan vendor:publish --provider="Overtrue\LaravelFollow\FollowServiceProvider" --tag="config"
+```
+
 And create tables:
 
 ```php
 $ php artisan migrate
 ```
 
-Finally, use `CanFollow` and `CanBeFollowed` in User model:
+Finally, add feature trait into User model:
 
 ```php
 use Overtrue\LaravelFollow\CanFollow;
@@ -44,41 +58,105 @@ class User extends Model
 
 ## Usage
 
-### Follow a user or users.
+Add `CanXXX` Traits to User model.
+
+```php
+class User extends Model
+{
+    use CanFollow, CanLike, CanFavorite, CanSubscribe;
+}
+```
+
+Add `CanBeXXX` Trait to target model, such as 'Post' or 'Music' ...:
+
+```php
+class Post extends Model
+{
+    use CanBeLiked, CanBeFavorited;
+}
+```
+
+All available APIs are listed below.
+
+### Follow
+
+#### `\Overtrue\LaravelFollow\CanFollow`
 
 ```php
 $user->follow(1)
 $user->follow([1,2,3,4])
-```
-
-### Unfollow a user or users.
-
-```php
 $user->unfollow(1)
 $user->unfollow([1,2,3,4])
-```
-
-### Get user followers
-
-```php
-$user->followers()
-```
-
-### Get user followings
-
-```php
 $user->followings()
-```
-
-### Check if follow
-```
 $user->isFollowing(1)
 ```
 
-### Check if followed by
+#### `\Overtrue\LaravelFollow\CanBeFollowed`
 
 ```php
-$user->isFollowedBy(1)
+$object->followers()
+$object->isFollowedBy(1)
+```
+
+### Like
+
+#### `\Overtrue\LaravelFollow\CanLike`
+
+```php
+$user->like(1)
+$user->like([1,2,3,4])
+$user->unlike(1)
+$user->unlike([1,2,3,4])
+$user->hasLiked(1)
+$user->likes()
+```
+
+#### `\Overtrue\LaravelFollow\CanBeLiked`
+
+```php
+$object->likers()
+$object->fans()
+$object->isLikedBy(1)
+```
+
+### Favorite
+
+#### `\Overtrue\LaravelFollow\CanFavorite`
+
+```php
+$user->favorite(1)
+$user->favorite([1,2,3,4])
+$user->unfavorite(1)
+$user->unfavorite([1,2,3,4])
+$user->hasFavorited(1)
+$user->favorites()
+```
+
+#### `\Overtrue\LaravelFollow\CanBeFavorited`
+
+```php
+$object->favoriters()
+$object->isFavoritedBy(1)
+```
+
+### Subscribe
+
+#### `\Overtrue\LaravelFollow\CanSubscribe`
+
+```php
+$user->subscribe(1)
+$user->subscribe([1,2,3,4])
+$user->unsubscribe(1)
+$user->unsubscribe([1,2,3,4])
+$user->hasSubscribed(1)
+$user->subscriptions()
+```
+
+#### `Overtrue\LaravelFollow\CanBeSubscribed`
+
+```php
+$object->subscribers()
+$object->isSubscribedBy(1)
 ```
 
 ## License
