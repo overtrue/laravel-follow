@@ -185,7 +185,7 @@ $user->follow($post); // targets: $post->id, $class = App\Post
 
 // Model array
 $posts = App\Post::popular()->get();
-$user->follow($post); // targets: [$posts->id, ...], $class = App\Post
+$user->follow($posts); // targets: [1, 2, ...], $class = App\Post
 ```
 
 ## License
