@@ -83,15 +83,15 @@ class Follow
 
     /**
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
-     * @param string                                           $classnane
+     * @param string                                           $className
      * @param array                                            $update
      *
      * @return \stdClass
      */
-    public static function formatTargets($targets, $classnane, array $update = [])
+    public static function formatTargets($targets, $className, array $update = [])
     {
         $result = new stdClass();
-        $result->classname = $classnane;
+        $result->classname = $className;
 
         if (!is_array($targets)) {
             $targets = [$targets];

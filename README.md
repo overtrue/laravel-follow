@@ -88,7 +88,7 @@ All available APIs are listed below.
 
 ### Follow
 
-#### `\Overtrue\LaravelFollow\CanFollow`
+#### `\Overtrue\LaravelFollow\Traits\CanFollow`
 
 ```php
 $user->follow($targets)
@@ -98,7 +98,7 @@ $user->followings(App\Post::class)
 $user->isFollowing($target)
 ```
 
-#### `\Overtrue\LaravelFollow\CanBeFollowed`
+#### `\Overtrue\LaravelFollow\Traits\CanBeFollowed`
 
 ```php
 $object->followers()
@@ -107,7 +107,7 @@ $object->isFollowedBy($user)
 
 ### Like
 
-#### `\Overtrue\LaravelFollow\CanLike`
+#### `\Overtrue\LaravelFollow\Traits\CanLike`
 
 ```php
 $user->like($targets)
@@ -117,7 +117,7 @@ $user->likes() // App\User:class
 $user->likes(App\Post::class) 
 ```
 
-#### `\Overtrue\LaravelFollow\CanBeLiked`
+#### `\Overtrue\LaravelFollow\Traits\CanBeLiked`
 
 ```php
 $object->likers()
@@ -127,7 +127,7 @@ $object->isLikedBy($user)
 
 ### Favorite
 
-#### `\Overtrue\LaravelFollow\CanFavorite`
+#### `\Overtrue\LaravelFollow\Traits\CanFavorite`
 
 ```php
 $user->favorite($targets)
@@ -137,7 +137,7 @@ $user->favorites() // App\User:class
 $user->favorites(App\Post::class)
 ```
 
-#### `\Overtrue\LaravelFollow\CanBeFavorited`
+#### `\Overtrue\LaravelFollow\Traits\CanBeFavorited`
 
 ```php
 $object->favoriters()
@@ -146,7 +146,7 @@ $object->isFavoritedBy($user)
 
 ### Subscribe
 
-#### `\Overtrue\LaravelFollow\CanSubscribe`
+#### `\Overtrue\LaravelFollow\Traits\CanSubscribe`
 
 ```php
 $user->subscribe($targets)
@@ -156,7 +156,7 @@ $user->subscriptions() // App\User:class
 $user->subscriptions(App\Post::class)
 ```
 
-#### `Overtrue\LaravelFollow\CanBeSubscribed`
+#### `Overtrue\LaravelFollow\Traits\CanBeSubscribed`
 
 ```php
 $object->subscribers()
