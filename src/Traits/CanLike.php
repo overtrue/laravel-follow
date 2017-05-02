@@ -54,7 +54,7 @@ trait CanLike
      */
     public function hasLiked($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'likes', $target, $class);
+        return Follow::isRelationExists($this, 'likes', $target, Follow::RELATION_LIKE, $class);
     }
 
     /**
