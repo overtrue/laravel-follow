@@ -61,10 +61,10 @@ class User extends Model
 Add `CanXXX` Traits to User model.
 
 ```php
-use Overtrue\LaravelFollow\CanFollow;
-use Overtrue\LaravelFollow\CanLike;
-use Overtrue\LaravelFollow\CanFavorite;
-use Overtrue\LaravelFollow\CanSubscribe;
+use Overtrue\LaravelFollow\Traits\CanFollow;
+use Overtrue\LaravelFollow\Traits\CanLike;
+use Overtrue\LaravelFollow\Traits\CanFavorite;
+use Overtrue\LaravelFollow\Traits\CanSubscribe;
 
 class User extends Model
 {
@@ -75,8 +75,8 @@ class User extends Model
 Add `CanBeXXX` Trait to target model, such as 'Post' or 'Music' ...:
 
 ```php
-use Overtrue\LaravelFollow\CanBeLiked;
-use Overtrue\LaravelFollow\CanBeFavorited;
+use Overtrue\LaravelFollow\Traits\CanBeLiked;
+use Overtrue\LaravelFollow\Traits\CanBeFavorited;
 
 class Post extends Model
 {
