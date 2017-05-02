@@ -47,8 +47,8 @@ $ php artisan migrate
 Finally, add feature trait into User model:
 
 ```php
-use Overtrue\LaravelFollow\CanFollow;
-use Overtrue\LaravelFollow\CanBeFollowed;
+use Overtrue\LaravelFollow\Traits\CanFollow;
+use Overtrue\LaravelFollow\Traits\CanBeFollowed;
 
 class User extends Model
 {
