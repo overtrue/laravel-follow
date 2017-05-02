@@ -91,19 +91,18 @@ All available APIs are listed below.
 #### `\Overtrue\LaravelFollow\CanFollow`
 
 ```php
-$user->follow(1)
-$user->follow([1,2,3,4])
-$user->unfollow(1)
-$user->unfollow([1,2,3,4])
-$user->followings()
-$user->isFollowing(1)
+$user->follow($targets)
+$user->unfollow($targets)
+$user->followings() // App\User:class
+$user->followings(App\Post::class)
+$user->isFollowing($target)
 ```
 
 #### `\Overtrue\LaravelFollow\CanBeFollowed`
 
 ```php
 $object->followers()
-$object->isFollowedBy(1)
+$object->isFollowedBy($user)
 ```
 
 ### Like
@@ -111,20 +110,19 @@ $object->isFollowedBy(1)
 #### `\Overtrue\LaravelFollow\CanLike`
 
 ```php
-$user->like(1)
-$user->like([1,2,3,4])
-$user->unlike(1)
-$user->unlike([1,2,3,4])
-$user->hasLiked(1)
-$user->likes()
+$user->like($targets)
+$user->unlike($targets)
+$user->hasLiked($target)
+$user->likes() // App\User:class
+$user->likes(App\Post::class) 
 ```
 
 #### `\Overtrue\LaravelFollow\CanBeLiked`
 
 ```php
 $object->likers()
-$object->fans()
-$object->isLikedBy(1)
+$object->fans() 
+$object->isLikedBy($user)
 ```
 
 ### Favorite
@@ -132,19 +130,18 @@ $object->isLikedBy(1)
 #### `\Overtrue\LaravelFollow\CanFavorite`
 
 ```php
-$user->favorite(1)
-$user->favorite([1,2,3,4])
-$user->unfavorite(1)
-$user->unfavorite([1,2,3,4])
-$user->hasFavorited(1)
-$user->favorites()
+$user->favorite($targets)
+$user->unfavorite($targets)
+$user->hasFavorited($target)
+$user->favorites() // App\User:class
+$user->favorites(App\Post::class)
 ```
 
 #### `\Overtrue\LaravelFollow\CanBeFavorited`
 
 ```php
 $object->favoriters()
-$object->isFavoritedBy(1)
+$object->isFavoritedBy($user)
 ```
 
 ### Subscribe
@@ -152,19 +149,43 @@ $object->isFavoritedBy(1)
 #### `\Overtrue\LaravelFollow\CanSubscribe`
 
 ```php
-$user->subscribe(1)
-$user->subscribe([1,2,3,4])
-$user->unsubscribe(1)
-$user->unsubscribe([1,2,3,4])
-$user->hasSubscribed(1)
-$user->subscriptions()
+$user->subscribe($targets)
+$user->unsubscribe($targets)
+$user->hasSubscribed($target)
+$user->subscriptions() // App\User:class
+$user->subscriptions(App\Post::class)
 ```
 
 #### `Overtrue\LaravelFollow\CanBeSubscribed`
 
 ```php
 $object->subscribers()
-$object->isSubscribedBy(1)
+$object->isSubscribedBy($user)
+```
+
+### Parameters
+
+All of the above mentioned methods of creating relationships, such as 'follow', 'like', 'unfollow', 'unlike', their syntax is as follows:
+
+```php
+follow(array|int|\Illuminate\Database\Eloquent\Model $targets, $class = __CLASS__)
+```
+
+So you can call them like this:
+
+```php
+// Id / Id array
+$user->follow(1); // targets: 1, $class = App\User
+$user->follow(1, App\Post::class); // targets: 1, $class = App\Post
+$user->follow([1, 2, 3]); // targets: [1, 2, 3], $class = App\User
+
+// Model
+$post = App\Post::find(7);
+$user->follow($post); // targets: $post->id, $class = App\Post
+
+// Model array
+$posts = App\Post::popular()->get();
+$user->follow($post); // targets: [$posts->id, ...], $class = App\Post
 ```
 
 ## License
