@@ -39,6 +39,7 @@ trait CanBeFollowed
     public function followers()
     {
         return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->wherePivot('relation', '=', Follow::RELATION_FOLLOW);
+                    ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
+                    ->withPivot('followable_type', 'relation', 'created_at');
     }
 }

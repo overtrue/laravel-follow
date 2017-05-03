@@ -80,6 +80,7 @@ trait CanFollow
     public function followings($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->wherePivot('relation', '=', Follow::RELATION_FOLLOW);
+                    ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
+                    ->withPivot('followable_type', 'relation', 'created_at');
     }
 }

@@ -80,6 +80,7 @@ trait CanLike
     public function likes($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->wherePivot('relation', '=', Follow::RELATION_LIKE);
+                    ->wherePivot('relation', '=', Follow::RELATION_LIKE)
+                    ->withPivot('followable_type', 'relation', 'created_at');
     }
 }

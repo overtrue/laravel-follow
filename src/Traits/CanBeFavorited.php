@@ -39,6 +39,7 @@ trait CanBeFavorited
     public function favoriters()
     {
         return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->wherePivot('relation', '=', Follow::RELATION_FAVORITE);
+                    ->wherePivot('relation', '=', Follow::RELATION_FAVORITE)
+                    ->withPivot('followable_type', 'relation', 'created_at');
     }
 }

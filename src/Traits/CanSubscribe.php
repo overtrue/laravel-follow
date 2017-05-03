@@ -80,6 +80,7 @@ trait CanSubscribe
     public function subscriptions($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->wherePivot('relation', '=', Follow::RELATION_SUBSCRIBE);
+                    ->wherePivot('relation', '=', Follow::RELATION_SUBSCRIBE)
+                    ->withPivot('followable_type', 'relation', 'created_at');
     }
 }
