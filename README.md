@@ -2,7 +2,7 @@
 
 :heart: This package helps you to add user based follow system to your model.
 
-> this repo is forked from mohd-isa/follow(deleted).
+> this repo is based on mohd-isa/follow(deleted).
 
 ## Features
 
