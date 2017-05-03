@@ -1,7 +1,9 @@
 <?php
-namespace Overtrue\LaravelFollow\Test;
+namespace Overtrue\LaravelFollow\Test\Traits;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Overtrue\LaravelFollow\Test\Other;
+use Overtrue\LaravelFollow\Test\TestCase;
+use Overtrue\LaravelFollow\Test\User;
 
 class CanFollowTest extends TestCase
 {
@@ -24,18 +26,6 @@ class CanFollowTest extends TestCase
         $user1->follow([$user2->id, $user3->id]);
 
         $this->assertCount(2, $user1->followings);
-    }
-
-    public function test_follow_not_existing_user()
-    {
-        $user1 = User::find(1);
-        $user2 = User::find(4);
-
-        try {
-            $user1->follow($user2);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Illuminate\Database\Eloquent\ModelNotFoundException', $e);
-        }
     }
 
     public function test_unfollow_user()
@@ -67,18 +57,6 @@ class CanFollowTest extends TestCase
         $user->follow($other);
 
         $this->assertCount(1, $user->followings(Other::class)->get());
-    }
-
-    public function test_follow_not_existing_other()
-    {
-        $user = User::find(1);
-        $other = Other::find(4);
-
-        try {
-            $user->follow($other);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Illuminate\Database\Eloquent\ModelNotFoundException', $e);
-        }
     }
 
     public function test_unfollow_other()

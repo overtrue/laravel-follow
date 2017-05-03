@@ -1,7 +1,9 @@
 <?php
-namespace Overtrue\LaravelFollow\Test;
+namespace Overtrue\LaravelFollow\Test\Traits;
 
-use Illuminate\Support\Facades\DB;
+use Overtrue\LaravelFollow\Test\Other;
+use Overtrue\LaravelFollow\Test\TestCase;
+use Overtrue\LaravelFollow\Test\User;
 
 class CanBeFollowedTest extends TestCase
 {

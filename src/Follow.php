@@ -27,14 +27,14 @@ class Follow
     const RELATION_FAVORITE = 'favorite';
 
     /**
-     * @param string                                           $model
+     * @param \Illuminate\Database\Eloquent\Model              $model
      * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $target
      * @param string                                           $class
      *
      * @return bool
      */
-    public static function isRelationExists($model, $relation, $target, $class = null)
+    public static function isRelationExists(Model $model, $relation, $target, $class = null)
     {
         $target = self::formatTargets($target, $class ?: config('follow.user_model'));
 
@@ -43,14 +43,14 @@ class Follow
     }
 
     /**
-     * @param string                                           $model
+     * @param \Illuminate\Database\Eloquent\Model              $model
      * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                           $class
      *
      * @return array
      */
-    public static function attachRelations($model, $relation, $targets, $class)
+    public static function attachRelations(Model $model, $relation, $targets, $class)
     {
         $relationName = self::getRelationTypeFromRelation($model->{$relation}());
 
@@ -63,14 +63,14 @@ class Follow
     }
 
     /**
-     * @param string                                           $model
+     * @param \Illuminate\Database\Eloquent\Model              $model
      * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                           $class
      *
      * @return array
      */
-    public static function detachRelations($model, $relation, $targets, $class)
+    public static function detachRelations(Model $model, $relation, $targets, $class)
     {
         $targets = self::formatTargets($targets, $class);
 
@@ -78,14 +78,14 @@ class Follow
     }
 
     /**
-     * @param string                                           $model
+     * @param \Illuminate\Database\Eloquent\Model              $model
      * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                           $class
      *
      * @return array
      */
-    public static function toggleRelations($model, $relation, $targets, $class)
+    public static function toggleRelations(Model $model, $relation, $targets, $class)
     {
         $targets = self::formatTargets($targets, $class);
 
@@ -94,15 +94,15 @@ class Follow
 
     /**
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
-     * @param string                                           $classnane
+     * @param string                                           $classname
      * @param array                                            $update
      *
      * @return \stdClass
      */
-    public static function formatTargets($targets, $classnane, array $update = [])
+    public static function formatTargets($targets, $classname, array $update = [])
     {
         $result = new stdClass();
-        $result->classname = $classnane;
+        $result->classname = $classname;
 
         if (!is_array($targets)) {
             $targets = [$targets];
@@ -117,7 +117,7 @@ class Follow
             return intval($target);
         }, $targets);
 
-        $result->targets = array_combine($result->ids, array_pad([], count($result->ids), $update));
+        $result->targets = empty($update) ? $result->ids : array_combine($result->ids, array_pad([], count($result->ids), $update));
 
         return $result;
     }
