@@ -24,11 +24,11 @@ trait CanFollow
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function follow($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'followings', $targets, Follow::RELATION_FOLLOW, $class);
+        return Follow::syncRelations($this, 'followings', $targets, $class);
     }
 
     /**
@@ -37,11 +37,24 @@ trait CanFollow
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function unfollow($targets, $class = __CLASS__)
     {
         return Follow::detachRelations($this, 'followings', $targets, $class);
+    }
+
+    /**
+     * Toggle follow an item or items.
+     *
+     * @param int|array|\Illuminate\Database\Eloquent\Model $targets
+     * @param string                                        $class
+     *
+     * @return array
+     */
+    public function toggleFollow($targets, $class = __CLASS__)
+    {
+        return Follow::toggleRelations($this, 'followings', $targets, $class);
     }
 
     /**
@@ -54,7 +67,7 @@ trait CanFollow
      */
     public function isFollowing($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'followings', $target, Follow::RELATION_FOLLOW, $class);
+        return Follow::isRelationExists($this, 'followings', $target, $class);
     }
 
     /**
@@ -67,6 +80,6 @@ trait CanFollow
     public function followings($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_FOLLOW);
+                    ->wherePivot('relation', '=', Follow::RELATION_FOLLOW);
     }
 }

@@ -28,7 +28,7 @@ trait CanBeFavorited
      */
     public function isFavoritedBy($user)
     {
-        return Follow::isRelationExists($this, 'favoriters', $user, Follow::RELATION_FAVORITE);
+        return Follow::isRelationExists($this, 'favoriters', $user);
     }
 
     /**
@@ -39,6 +39,6 @@ trait CanBeFavorited
     public function favoriters()
     {
         return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_FAVORITE);
+                    ->wherePivot('relation', '=', Follow::RELATION_FAVORITE);
     }
 }

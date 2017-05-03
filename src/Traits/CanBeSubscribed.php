@@ -28,7 +28,7 @@ trait CanBeSubscribed
      */
     public function isSubscribedBy($user)
     {
-        return Follow::isRelationExists($this, 'subscribers', $user, Follow::RELATION_SUBSCRIBE);
+        return Follow::isRelationExists($this, 'subscribers', $user);
     }
 
     /**
@@ -39,6 +39,6 @@ trait CanBeSubscribed
     public function subscribers()
     {
         return $this->morphMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_SUBSCRIBE);
+                    ->wherePivot('relation', '=', Follow::RELATION_SUBSCRIBE);
     }
 }

@@ -24,11 +24,11 @@ trait CanFavorite
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function favorite($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'favorites', $targets, Follow::RELATION_FAVORITE, $class);
+        return Follow::syncRelations($this, 'favorites', $targets, $class);
     }
 
     /**
@@ -37,11 +37,24 @@ trait CanFavorite
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function unfavorite($targets, $class = __CLASS__)
     {
         return Follow::detachRelations($this, 'favorites', $targets, $class);
+    }
+
+    /**
+     * Toggle favorite an item or items.
+     *
+     * @param int|array|\Illuminate\Database\Eloquent\Model $targets
+     * @param string                                        $class
+     *
+     * @return array
+     */
+    public function toggleFavorite($targets, $class = __CLASS__)
+    {
+        return Follow::toggleRelations($this, 'favorites', $targets, $class);
     }
 
     /**
@@ -54,7 +67,7 @@ trait CanFavorite
      */
     public function hasFavorited($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'favorites', $target, Follow::RELATION_FAVORITE, $class);
+        return Follow::isRelationExists($this, 'favorites', $target, $class);
     }
 
     /**
@@ -67,6 +80,6 @@ trait CanFavorite
     public function favorites($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_FAVORITE);
+                    ->wherePivot('relation', '=', Follow::RELATION_FAVORITE);
     }
 }

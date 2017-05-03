@@ -24,24 +24,37 @@ trait CanLike
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function like($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'likes', $targets, Follow::RELATION_LIKE, $class);
+        return Follow::syncRelations($this, 'likes', $targets, $class);
     }
 
     /**
-     * Unfollow an item or items.
+     * Unlike an item or items.
      *
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function unlike($targets, $class = __CLASS__)
     {
-        return Follow::detachRelations($this, 'likes', $targets, Follow::RELATION_LIKE, $class);
+        return Follow::detachRelations($this, 'likes', $targets, $class);
+    }
+
+    /**
+     * Toggle like an item or items.
+     *
+     * @param int|array|\Illuminate\Database\Eloquent\Model $targets
+     * @param string                                        $class
+     *
+     * @return array
+     */
+    public function toggleLike($targets, $class = __CLASS__)
+    {
+        return Follow::toggleRelations($this, 'likes', $targets, $class);
     }
 
     /**
@@ -54,7 +67,7 @@ trait CanLike
      */
     public function hasLiked($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'likes', $target, Follow::RELATION_LIKE, $class);
+        return Follow::isRelationExists($this, 'likes', $target, $class);
     }
 
     /**
@@ -67,6 +80,6 @@ trait CanLike
     public function likes($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_LIKE);
+                    ->wherePivot('relation', '=', Follow::RELATION_LIKE);
     }
 }

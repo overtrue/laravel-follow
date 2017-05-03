@@ -93,6 +93,7 @@ All available APIs are listed below.
 ```php
 $user->follow($targets)
 $user->unfollow($targets)
+$user->toggleFollow($targets)
 $user->followings() // App\User:class
 $user->followings(App\Post::class)
 $user->isFollowing($target)
@@ -112,6 +113,7 @@ $object->isFollowedBy($user)
 ```php
 $user->like($targets)
 $user->unlike($targets)
+$user->toggleLike($targets)
 $user->hasLiked($target)
 $user->likes() // App\User:class
 $user->likes(App\Post::class) 
@@ -132,6 +134,7 @@ $object->isLikedBy($user)
 ```php
 $user->favorite($targets)
 $user->unfavorite($targets)
+$user->toggleFavorite($targets)
 $user->hasFavorited($target)
 $user->favorites() // App\User:class
 $user->favorites(App\Post::class)
@@ -151,6 +154,7 @@ $object->isFavoritedBy($user)
 ```php
 $user->subscribe($targets)
 $user->unsubscribe($targets)
+$user->toggleSubscribe($targets)
 $user->hasSubscribed($target)
 $user->subscriptions() // App\User:class
 $user->subscriptions(App\Post::class)

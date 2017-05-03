@@ -28,7 +28,7 @@ trait CanBeFollowed
      */
     public function isFollowedBy($user)
     {
-        return Follow::isRelationExists($this, 'followers', $user, Follow::RELATION_FOLLOW);
+        return Follow::isRelationExists($this, 'followers', $user);
     }
 
     /**
@@ -39,6 +39,6 @@ trait CanBeFollowed
     public function followers()
     {
         return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_FOLLOW);
+                    ->wherePivot('relation', '=', Follow::RELATION_FOLLOW);
     }
 }

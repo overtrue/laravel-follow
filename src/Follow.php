@@ -13,6 +13,7 @@ namespace Overtrue\LaravelFollow;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use stdClass;
 
 /**
@@ -26,15 +27,14 @@ class Follow
     const RELATION_FAVORITE = 'favorite';
 
     /**
-     * @param string  $model
-     * @param string  $relation
-     * @param array|string|\Illuminate\Database\Eloquent\Model      $target
-     * @param string                                                $relationName
-     * @param string                                                $class
+     * @param string                                           $model
+     * @param string                                           $relation
+     * @param array|string|\Illuminate\Database\Eloquent\Model $target
+     * @param string                                           $class
      *
      * @return bool
      */
-    public static function isRelationExists($model, $relation, $target, $relationName, $class = null)
+    public static function isRelationExists($model, $relation, $target, $class = null)
     {
         $userModel = config('follow.user_model');
         $target = self::formatTargets($target, $class ?: $userModel);
@@ -42,22 +42,23 @@ class Follow
         $followableType = $class ? $target->classname : get_class($model);
 
         return $model->{$relation}($target->classname)
-                ->where('relation', $relationName)
-                ->where('followable_type', $followableType)
-                ->where($key, head($target->ids))->exists();
+            ->where('followable_type', $followableType)
+            ->where($key, head($target->ids))->exists();
     }
 
     /**
-     * @param string $model
-     * @param string $relation
+     * @param string                                           $model
+     * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
-     * @param string $relationName
-     * @param string $class
+     * @param string                                           $class
      *
-     * @return int
+     * @return array
      */
-    public static function syncRelations($model, $relation, $targets, $relationName, $class)
+    public static function syncRelations($model, $relation, $targets, $class)
     {
+
+        $relationName = self::getRelationTypeFromRelation($model->{$relation}());
+
         $targets = self::formatTargets($targets, $class, [
             'relation' => $relationName,
             'created_at' => Carbon::now()->format(config('follow.date_format', 'Y-m-d H:i:s')),
@@ -67,12 +68,12 @@ class Follow
     }
 
     /**
-     * @param string $model
-     * @param string $relation
+     * @param string                                           $model
+     * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
-     * @param string $class
+     * @param string                                           $class
      *
-     * @return mixed
+     * @return array
      */
     public static function detachRelations($model, $relation, $targets, $class)
     {
@@ -82,16 +83,31 @@ class Follow
     }
 
     /**
+     * @param string                                           $model
+     * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
-     * @param string                                           $className
+     * @param string                                           $class
+     *
+     * @return array
+     */
+    public static function toggleRelations($model, $relation, $targets, $class)
+    {
+        $targets = self::formatTargets($targets, $class);
+
+        return $model->{$relation}($targets->classname)->toggle($targets->ids);
+    }
+
+    /**
+     * @param array|string|\Illuminate\Database\Eloquent\Model $targets
+     * @param string                                           $classnane
      * @param array                                            $update
      *
      * @return \stdClass
      */
-    public static function formatTargets($targets, $className, array $update = [])
+    public static function formatTargets($targets, $classnane, array $update = [])
     {
         $result = new stdClass();
-        $result->classname = $className;
+        $result->classname = $classnane;
 
         if (!is_array($targets)) {
             $targets = [$targets];
@@ -109,5 +125,23 @@ class Follow
         $result->targets = array_combine($result->ids, array_pad([], count($result->ids), $update));
 
         return $result;
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Relations\MorphToMany $relation
+     *
+     * @throws \Exception
+     * @return array
+     *
+     */
+    protected static function getRelationTypeFromRelation(MorphToMany $relation)
+    {
+        $wheres = array_pluck($relation->getQuery()->getQuery()->wheres, 'value', 'column');
+
+        if (empty($wheres['followables.relation'])) {
+            throw new \Exception('Invalid relation definition.');
+        }
+
+        return $wheres['followables.relation'];
     }
 }

@@ -28,7 +28,7 @@ trait CanBeLiked
      */
     public function isLikedBy($user)
     {
-        return Follow::isRelationExists($this, 'likers', $user, Follow::RELATION_LIKE);
+        return Follow::isRelationExists($this, 'likers', $user);
     }
 
     /**
@@ -39,7 +39,7 @@ trait CanBeLiked
     public function likers()
     {
         return $this->morphMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_LIKE);
+                    ->wherePivot('relation', '=', Follow::RELATION_LIKE);
     }
 
     /**

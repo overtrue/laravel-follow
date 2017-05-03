@@ -24,11 +24,11 @@ trait CanSubscribe
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function subscribe($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'subscriptions', $targets, Follow::RELATION_SUBSCRIBE, $class);
+        return Follow::syncRelations($this, 'subscriptions', $targets, $class);
     }
 
     /**
@@ -37,11 +37,24 @@ trait CanSubscribe
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return int
+     * @return array
      */
     public function unsubscribe($targets, $class = __CLASS__)
     {
         return Follow::detachRelations($this, 'subscriptions', $targets, $class);
+    }
+
+    /**
+     * Toggle subscribe an item or items.
+     *
+     * @param int|array|\Illuminate\Database\Eloquent\Model $targets
+     * @param string                                        $class
+     *
+     * @return array
+     */
+    public function toggleSubscribe($targets, $class = __CLASS__)
+    {
+        return Follow::toggleRelations($this, 'subscriptions', $targets, $class);
     }
 
     /**
@@ -54,7 +67,7 @@ trait CanSubscribe
      */
     public function hasSubscribed($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'subscriptions', $target, Follow::RELATION_SUBSCRIBE, $class);
+        return Follow::isRelationExists($this, 'subscriptions', $target, $class);
     }
 
     /**
@@ -67,6 +80,6 @@ trait CanSubscribe
     public function subscriptions($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->where('relation', Follow::RELATION_SUBSCRIBE);
+                    ->wherePivot('relation', '=', Follow::RELATION_SUBSCRIBE);
     }
 }
