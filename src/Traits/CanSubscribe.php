@@ -28,7 +28,7 @@ trait CanSubscribe
      */
     public function subscribe($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'subscriptions', $targets, $class);
+        return Follow::attachRelations($this, 'subscriptions', $targets, $class);
     }
 
     /**

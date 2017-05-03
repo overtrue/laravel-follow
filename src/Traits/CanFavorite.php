@@ -28,7 +28,7 @@ trait CanFavorite
      */
     public function favorite($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'favorites', $targets, $class);
+        return Follow::attachRelations($this, 'favorites', $targets, $class);
     }
 
     /**

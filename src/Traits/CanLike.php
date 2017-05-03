@@ -28,7 +28,7 @@ trait CanLike
      */
     public function like($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'likes', $targets, $class);
+        return Follow::attachRelations($this, 'likes', $targets, $class);
     }
 
     /**

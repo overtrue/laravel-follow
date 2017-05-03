@@ -36,14 +36,10 @@ class Follow
      */
     public static function isRelationExists($model, $relation, $target, $class = null)
     {
-        $userModel = config('follow.user_model');
-        $target = self::formatTargets($target, $class ?: $userModel);
-        $key = $class ? 'followable_id' : 'user_id';
-        $followableType = $class ? $target->classname : get_class($model);
+        $target = self::formatTargets($target, $class ?: config('follow.user_model'));
 
         return $model->{$relation}($target->classname)
-            ->where('followable_type', $followableType)
-            ->where($key, head($target->ids))->exists();
+                        ->where($class ? 'followable_id' : 'user_id', head($target->ids))->exists();
     }
 
     /**
@@ -54,9 +50,8 @@ class Follow
      *
      * @return array
      */
-    public static function syncRelations($model, $relation, $targets, $class)
+    public static function attachRelations($model, $relation, $targets, $class)
     {
-
         $relationName = self::getRelationTypeFromRelation($model->{$relation}());
 
         $targets = self::formatTargets($targets, $class, [
@@ -64,7 +59,7 @@ class Follow
             'created_at' => Carbon::now()->format(config('follow.date_format', 'Y-m-d H:i:s')),
         ]);
 
-        return $model->{$relation}($targets->classname)->sync($targets->targets);
+        return $model->{$relation}($targets->classname)->sync($targets->targets, false);
     }
 
     /**

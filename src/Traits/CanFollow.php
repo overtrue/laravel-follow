@@ -28,7 +28,7 @@ trait CanFollow
      */
     public function follow($targets, $class = __CLASS__)
     {
-        return Follow::syncRelations($this, 'followings', $targets, $class);
+        return Follow::attachRelations($this, 'followings', $targets, $class);
     }
 
     /**
