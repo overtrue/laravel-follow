@@ -52,12 +52,7 @@ class Follow
      */
     public static function attachRelations(Model $model, $relation, $targets, $class)
     {
-        $relationName = self::getRelationTypeFromRelation($model->{$relation}());
-
-        $targets = self::formatTargets($targets, $class, [
-            'relation' => $relationName,
-            'created_at' => Carbon::now()->format(config('follow.date_format', 'Y-m-d H:i:s')),
-        ]);
+        $targets = self::attachPivotsFromRelation($model->{$relation}(), $targets, $class);
 
         return $model->{$relation}($targets->classname)->sync($targets->targets, false);
     }
@@ -87,9 +82,24 @@ class Follow
      */
     public static function toggleRelations(Model $model, $relation, $targets, $class)
     {
-        $targets = self::formatTargets($targets, $class);
+        $targets = self::attachPivotsFromRelation($model->{$relation}(), $targets, $class);
 
-        return $model->{$relation}($targets->classname)->toggle($targets->ids);
+        return $model->{$relation}($targets->classname)->toggle($targets->targets);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Relations\MorphToMany $morph
+     * @param array|string|\Illuminate\Database\Eloquent\Model    $targets
+     * @param string                                              $class
+     *
+     * @return \stdClass
+     */
+    public static function attachPivotsFromRelation(MorphToMany $morph, $targets, $class)
+    {
+        return self::formatTargets($targets, $class, [
+            'relation' => self::getRelationTypeFromRelation($morph),
+            'created_at' => Carbon::now()->format(config('follow.date_format', 'Y-m-d H:i:s')),
+        ]);
     }
 
     /**
@@ -126,8 +136,8 @@ class Follow
      * @param \Illuminate\Database\Eloquent\Relations\MorphToMany $relation
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     protected static function getRelationTypeFromRelation(MorphToMany $relation)
     {

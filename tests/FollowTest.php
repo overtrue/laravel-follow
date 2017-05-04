@@ -59,13 +59,7 @@ class FollowTest extends TestCase
         $model = \Mockery::mock(Model::class);
         $model->shouldReceive('followings')->withNoArgs()->andReturn($morph)->once();
         $model->shouldReceive('followings')->with('App\User')->andReturnSelf()->once();
-        $model->shouldReceive('sync')->with(\Mockery::on(function($object) use ($targets, $relationType) {
-            return array_keys($object) === $targets
-                && $object[$targets[0]]['relation'] === $relationType
-                && $object[$targets[1]]['relation'] === $relationType
-                && strpos($object[$targets[0]]['created_at'], date('Y-m-d H:i:')) === 0
-                && strlen($object[$targets[0]]['created_at']) === 19;
-        }), false)->once()->andReturn([1, 2, 3]);
+        $model->shouldReceive('sync')->with(\Mockery::type('array'), false)->once()->andReturn([1, 2, 3]);
 
         $this->assertSame([1, 2, 3], Follow::attachRelations($model, 'followings', $targets, $class));
     }
@@ -113,11 +107,55 @@ class FollowTest extends TestCase
     {
         $targets = [1, 2];
         $class = 'App\Foo';
+
+        $builder = new \stdClass();
+        $relationType = 'follow';
+        $builder->wheres = [
+            [
+                'column' => 'age',
+                'value' => 18,
+            ],
+            [
+                'column' => 'followables.relation',
+                'value' => $relationType,
+            ],
+        ];
+        $morph = \Mockery::mock(MorphToMany::class);
+        $morph->shouldReceive('getQuery->getQuery')->andReturn($builder);
+
         $model = \Mockery::mock(Model::class);
+        $model->shouldReceive('followings')->with()->andReturn($morph)->once();
         $model->shouldReceive('followings')->with($class)->andReturnSelf()->once();
-        $model->shouldReceive('toggle')->with($targets)->andReturn([1, 3])->once();
+        $model->shouldReceive('toggle')->with(\Mockery::type('array'))->andReturn([1, 3])->once();
 
         $this->assertSame([1, 3], Follow::toggleRelations($model, 'followings', $targets, $class));
+    }
+
+    public function testAttachPivotsFromRelation()
+    {
+        $builder = new \stdClass();
+        $relationType = 'follow';
+        $builder->wheres = [
+            [
+                'column' => 'age',
+                'value' => 18,
+            ],
+            [
+                'column' => 'followables.relation',
+                'value' => $relationType,
+            ],
+        ];
+        $morph = \Mockery::mock(MorphToMany::class);
+        $morph->shouldReceive('getQuery->getQuery')->andReturn($builder);
+
+        $targets = Follow::attachPivotsFromRelation($morph, [1, 34], 'App\Foo');
+
+        $this->assertArrayHasKey(1, $targets->targets);
+        $this->assertArrayHasKey(34, $targets->targets);
+        $this->assertSame($relationType, $targets->targets[1]['relation']);
+        $this->assertSame($relationType, $targets->targets[34]['relation']);
+        $this->assertStringStartsWith(date('Y-m-d H:i:'), $targets->targets[34]['created_at']);
+        $this->assertRegExp('/^\d{4}(\-\d{2}){2} (\d{2}:){2}\d{2}$/', $targets->targets[34]['created_at']);
     }
 
     public function testFormatTargets()
