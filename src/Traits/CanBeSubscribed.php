@@ -38,7 +38,7 @@ trait CanBeSubscribed
      */
     public function subscribers()
     {
-        return $this->morphMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
+        return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
                     ->wherePivot('relation', '=', Follow::RELATION_SUBSCRIBE)
                     ->withPivot('followable_type', 'relation', 'created_at');
     }
