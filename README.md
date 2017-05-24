@@ -94,15 +94,15 @@ All available APIs are listed below.
 $user->follow($targets)
 $user->unfollow($targets)
 $user->toggleFollow($targets)
-$user->followings() // App\User:class
-$user->followings(App\Post::class)
+$user->followings()->get() // App\User:class
+$user->followings(App\Post::class)->get()
 $user->isFollowing($target)
 ```
 
 #### `\Overtrue\LaravelFollow\Traits\CanBeFollowed`
 
 ```php
-$object->followers()
+$object->followers()->get()
 $object->isFollowedBy($user)
 ```
 
@@ -115,15 +115,15 @@ $user->like($targets)
 $user->unlike($targets)
 $user->toggleLike($targets)
 $user->hasLiked($target)
-$user->likes() // App\User:class
-$user->likes(App\Post::class) 
+$user->likes()->get() // default object: App\User:class
+$user->likes(App\Post::class)->get()
 ```
 
 #### `\Overtrue\LaravelFollow\Traits\CanBeLiked`
 
 ```php
-$object->likers()
-$object->fans() 
+$object->likers()->get() // or $object->likers
+$object->fans()->get() // or $object->fans
 $object->isLikedBy($user)
 ```
 
@@ -136,14 +136,14 @@ $user->favorite($targets)
 $user->unfavorite($targets)
 $user->toggleFavorite($targets)
 $user->hasFavorited($target)
-$user->favorites() // App\User:class
-$user->favorites(App\Post::class)
+$user->favorites()->get() // App\User:class
+$user->favorites(App\Post::class)->get()
 ```
 
 #### `\Overtrue\LaravelFollow\Traits\CanBeFavorited`
 
 ```php
-$object->favoriters()
+$object->favoriters()->get() // or $object->favoriters 
 $object->isFavoritedBy($user)
 ```
 
@@ -156,14 +156,14 @@ $user->subscribe($targets)
 $user->unsubscribe($targets)
 $user->toggleSubscribe($targets)
 $user->hasSubscribed($target)
-$user->subscriptions() // App\User:class
-$user->subscriptions(App\Post::class)
+$user->subscriptions()->get() // default object: App\User:class
+$user->subscriptions(App\Post::class)->get()
 ```
 
 #### `Overtrue\LaravelFollow\Traits\CanBeSubscribed`
 
 ```php
-$object->subscribers()
+$object->subscribers() // or $object->subscribers 
 $object->isSubscribedBy($user)
 ```
 
@@ -191,6 +191,16 @@ $user->follow($post); // targets: $post->id, $class = App\Post
 $posts = App\Post::popular()->get();
 $user->follow($posts); // targets: [1, 2, ...], $class = App\Post
 ```
+
+### Query relations
+
+```php
+$followers = $user->followers
+$followers = $user->followers()->where('id', '>', 10)->get()
+$followers = $user->followers()->orderByDesc('id')->get()
+```
+
+The other is the same usage.
 
 ## License
 
