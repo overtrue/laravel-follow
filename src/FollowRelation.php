@@ -15,6 +15,9 @@ namespace Overtrue\LaravelFollow;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
+/**
+ * Class FollowRelation
+ */
 class FollowRelation extends Model
 {
     /**
