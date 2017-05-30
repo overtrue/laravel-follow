@@ -13,6 +13,7 @@ namespace Overtrue\LaravelFollow;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use InvalidArgumentException;
 
 /**
@@ -28,12 +29,12 @@ class FollowRelation extends Model
     /**
      * @var array
      */
-    protected $with = ['object'];
+    protected $with = ['followable'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function object()
+    public function followable()
     {
         return $this->morphTo(config('follow.morph_prefix', 'followable'));
     }
@@ -86,6 +87,12 @@ class FollowRelation extends Model
      */
     protected function normalizeFollowableType($type)
     {
+        $morphMap = Relation::morphMap();
+
+        if (! empty($morphMap) && in_array($type, $morphMap, true)) {
+            $type = array_search($type, $morphMap, true);
+        }
+
         if (class_exists($type)) {
             return $type;
         }

@@ -202,6 +202,30 @@ $followers = $user->followers()->orderByDesc('id')->get()
 
 The other is the same usage.
 
+### Working with model.
+
+```php
+use Overtrue\LaravelFollow\FollowRelation;
+
+// get most popular object
+
+// all types
+$relations = FollowRelation::popular()->get();
+
+// followable_type = App\Post
+$relations = FollowRelation::popular(App\Post::class)->get(); 
+
+// followable_type = App\User
+$relations = FollowRelation::popular('user')->get();
+ 
+// followable_type = App\Post
+$relations = FollowRelation::popular('post')->get();
+
+// Pagination
+$relations = FollowRelation::popular(App\Post::class)->paginate(15); 
+
+```
+
 ## License
 
 MIT
