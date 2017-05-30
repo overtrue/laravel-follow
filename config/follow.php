@@ -30,4 +30,9 @@ return [
      * Date format for created_at.
      */
     'date_format' => 'Y-m-d H:i:s',
+
+    /**
+     * Namespace of models.
+     */
+    'model_namespace' => 'App',
 ];
