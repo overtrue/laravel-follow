@@ -22,16 +22,19 @@ class FollowServiceProvider extends ServiceProvider
     {
         $root = dirname(__DIR__);
 
-        $this->publishes([
-            $root.'/config/follow.php' => config_path('follow.php'),
-        ], 'config');
+        if (!file_exists(config_path('follow.php'))) {
+            $this->publishes([
+                $root.'/config/follow.php' => config_path('follow.php'),
+            ], 'config');
+        }
 
-
-        $datePrefix = date('Y_m_d_His');
-        $this->publishes([
-            $root.'/database/migrations/create_laravel_follow_tables.php'
-                => database_path("/migrations/{$datePrefix}_create_laravel_follow_tables.php"),
-        ], 'migrations');
+        if (!class_exists('CreateLaravelFollowTables')) {
+            $datePrefix = date('Y_m_d_His');
+            $this->publishes([
+                $root.'/database/migrations/create_laravel_follow_tables.php'
+                    => database_path("/migrations/{$datePrefix}_create_laravel_follow_tables.php"),
+            ], 'migrations');
+        }
     }
 
     /**
