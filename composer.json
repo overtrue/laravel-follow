@@ -25,5 +25,12 @@
       "psr-4": {
           "Overtrue\\LaravelFollow\\Test\\": "tests"
       }
-    }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Overtrue\\LaravelFollow\\FollowServiceProvider"
+            ]
+        }
+    },
 }
