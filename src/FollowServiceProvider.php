@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -31,8 +31,7 @@ class FollowServiceProvider extends ServiceProvider
         if (!class_exists('CreateLaravelFollowTables')) {
             $datePrefix = date('Y_m_d_His');
             $this->publishes([
-                $root.'/database/migrations/create_laravel_follow_tables.php'
-                    => database_path("/migrations/{$datePrefix}_create_laravel_follow_tables.php"),
+                $root.'/database/migrations/create_laravel_follow_tables.php' => database_path("/migrations/{$datePrefix}_create_laravel_follow_tables.php"),
             ], 'migrations');
         }
     }
