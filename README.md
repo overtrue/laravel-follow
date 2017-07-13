@@ -1,8 +1,21 @@
-# Laravel 5 Follow System
+<p align="center">
+<h1>Laravel 5 Follow System</h1>
+</p>
+<p align="center">:heart: This package helps you to add user based follow system to your model.</p>
 
-:heart: This package helps you to add user based follow system to your model.
+<p align="center">
+<a href="https://travis-ci.org/overtrue/laravel-follow"><img src="https://travis-ci.org/overtrue/laravel-follow.svg?branch=master" alt="Build Status"></a>
+<a href="https://packagist.org/packages/overtrue/laravel-follow"><img src="https://poser.pugx.org/overtrue/laravel-follow/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/overtrue/laravel-follow"><img src="https://poser.pugx.org/overtrue/laravel-follow/v/unstable.svg" alt="Latest Unstable Version"></a>
+<a href="https://scrutinizer-ci.com/g/overtrue/laravel-follow/build-status/master"><img src="https://scrutinizer-ci.com/g/overtrue/laravel-follow/badges/build.png?b=master" alt="Build Status"></a>
+<a href="https://scrutinizer-ci.com/g/overtrue/laravel-follow/?branch=master"><img src="https://scrutinizer-ci.com/g/overtrue/laravel-follow/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"></a>
+<a href="https://scrutinizer-ci.com/g/overtrue/laravel-follow/?branch=master"><img src="https://scrutinizer-ci.com/g/overtrue/laravel-follow/badges/coverage.png?b=master" alt="Code Coverage"></a>
+<a href="https://packagist.org/packages/overtrue/laravel-follow"><img src="https://poser.pugx.org/overtrue/laravel-follow/downloads" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/overtrue/laravel-follow"><img src="https://poser.pugx.org/overtrue/laravel-follow/license" alt="License"></a>
+</p>
 
 > this repo is based on mohd-isa/follow(deleted).
+
 
 ## Features
 
