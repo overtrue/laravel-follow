@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -11,13 +11,12 @@
 
 namespace Overtrue\LaravelFollow;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use InvalidArgumentException;
 
 /**
- * Class FollowRelation
+ * Class FollowRelation.
  */
 class FollowRelation extends Model
 {
@@ -40,8 +39,8 @@ class FollowRelation extends Model
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder  $query
-     * @param string|null                            $type
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null                           $type
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -59,7 +58,7 @@ class FollowRelation extends Model
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTable()
     {
@@ -71,7 +70,7 @@ class FollowRelation extends Model
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDates()
     {
@@ -82,14 +81,14 @@ class FollowRelation extends Model
      * @param string $type
      *
      * @throws \InvalidArgumentException
-     * @return string
      *
+     * @return string
      */
     protected function normalizeFollowableType($type)
     {
         $morphMap = Relation::morphMap();
 
-        if (! empty($morphMap) && in_array($type, $morphMap, true)) {
+        if (!empty($morphMap) && in_array($type, $morphMap, true)) {
             $type = array_search($type, $morphMap, true);
         }
 
