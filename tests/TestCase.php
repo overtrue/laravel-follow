@@ -34,7 +34,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite.database', ':memory:');
-        
+
         return $app;
     }
 
