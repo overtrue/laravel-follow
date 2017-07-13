@@ -1,10 +1,8 @@
 <?php
 namespace Overtrue\LaravelFollow\Test;
 
-use Illuminate\Filesystem\ClassFinder;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\DB;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
@@ -57,7 +55,6 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     public function migrate()
     {
         $fileSystem = new Filesystem();
-        $classFinder = new ClassFinder();
 
         $fileSystem->copy(
             __DIR__ . '/../database/migrations/create_laravel_follow_tables.php',
@@ -66,10 +63,11 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
         foreach ($fileSystem->files(__DIR__ . "/../tests/database/migrations") as $file) {
             $fileSystem->requireOnce($file);
-            $migrationClass = $classFinder->findClass($file);
 
-            (new $migrationClass)->up();
         }
+        (new \CreateUsersTable())->up();
+        (new \CreateOthersTable())->up();
+        (new \CreateLaravelFollowTables())->up();
     }
 
     public function tearDown()
