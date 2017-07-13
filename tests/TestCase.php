@@ -32,6 +32,9 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $app = require __DIR__.'/../vendor/laravel/laravel/bootstrap/app.php';
         $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
+        $app['config']->set('database.default', 'sqlite');
+        $app['config']->set('database.connections.sqlite.database', ':memory:');
+        
         return $app;
     }
 
@@ -48,8 +51,6 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
         $this->app['config']->set('follow', $this->config);
         $this->app['config']->set('follow.user_model', User::class);
-        $this->app['config']->set('database.default', 'sqlite');
-        $this->app['config']->set('database.connections.sqlite.database', ':memory:');
 
         $this->migrate();
         $this->seed();
