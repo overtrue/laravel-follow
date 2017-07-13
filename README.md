@@ -13,9 +13,6 @@
 <a href="https://packagist.org/packages/overtrue/laravel-follow"><img src="https://poser.pugx.org/overtrue/laravel-follow/license" alt="License"></a>
 </p>
 
-> this repo is based on mohd-isa/follow(deleted).
-
-
 ## Features
 
 - Support actions:
