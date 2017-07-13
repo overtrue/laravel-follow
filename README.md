@@ -1,6 +1,5 @@
-<p align="center">
-<h1>Laravel 5 Follow System</h1>
-</p>
+<h1 align="center">Laravel 5 Follow System</h1>
+
 <p align="center">:heart: This package helps you to add user based follow system to your model.</p>
 
 <p align="center">
