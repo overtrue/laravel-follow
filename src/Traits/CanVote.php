@@ -103,6 +103,20 @@ trait CanVote
 	{
 		return Follow::isRelationExists($this, 'downvote', $target, $class);
 	}
+	
+	/**
+	 * Return item votes.
+	 *
+	 * @param string $class
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function votes($class = __CLASS__)
+	{
+		return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
+					->wherePivotIn('relation', [Follow::RELATION_UPVOTE, Follow::RELATION_DOWNVOTE])
+		            ->withPivot('followable_type', 'relation', 'created_at');
+	}
 
     /**
      * Return item upvotes.
