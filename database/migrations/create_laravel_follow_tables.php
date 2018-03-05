@@ -19,7 +19,7 @@ class CreateLaravelFollowTables extends Migration
      */
     public function up()
     {
-        Schema::create(config('follow.followable_table', 'followables'), function(Blueprint $table) {
+        Schema::create(config('follow.followable_table', 'followables'), function (Blueprint $table) {
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('followable_id');
             $table->string('followable_type')->index();
@@ -39,7 +39,7 @@ class CreateLaravelFollowTables extends Migration
      */
     public function down()
     {
-        Schema::table(config('follow.followable_table', 'followables'), function($table) {
+        Schema::table(config('follow.followable_table', 'followables'), function ($table) {
             $table->dropForeign(config('follow.followable_table', 'followables').'_user_id_foreign');
         });
 
