@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -22,10 +22,15 @@ use stdClass;
 class Follow
 {
     const RELATION_LIKE = 'like';
+
     const RELATION_FOLLOW = 'follow';
+
     const RELATION_SUBSCRIBE = 'subscribe';
+
     const RELATION_FAVORITE = 'favorite';
+
     const RELATION_UPVOTE = 'upvote';
+
     const RELATION_DOWNVOTE = 'downvote';
 
     /**
@@ -120,9 +125,10 @@ class Follow
             $targets = [$targets];
         }
 
-        $result->ids = array_map(function($target) use ($result){
+        $result->ids = array_map(function ($target) use ($result) {
             if ($target instanceof Model) {
                 $result->classname = get_class($target);
+
                 return $target->getKey();
             }
 
