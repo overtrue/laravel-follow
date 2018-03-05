@@ -20,6 +20,7 @@
     - Like
     - Subscribe
     - Favorite
+    - Vote (Upvote & Downvote)
 
 ## Installation
 
@@ -74,10 +75,11 @@ use Overtrue\LaravelFollow\Traits\CanFollow;
 use Overtrue\LaravelFollow\Traits\CanLike;
 use Overtrue\LaravelFollow\Traits\CanFavorite;
 use Overtrue\LaravelFollow\Traits\CanSubscribe;
+use Overtrue\LaravelFollow\Traits\CanVote;
 
 class User extends Model
 {
-    use CanFollow, CanLike, CanFavorite, CanSubscribe;
+    use CanFollow, CanLike, CanFavorite, CanSubscribe, CanVote;
 }
 ```
 
@@ -86,10 +88,11 @@ Add `CanBeXXX` Trait to target model, such as 'Post' or 'Music' ...:
 ```php
 use Overtrue\LaravelFollow\Traits\CanBeLiked;
 use Overtrue\LaravelFollow\Traits\CanBeFavorited;
+use Overtrue\LaravelFollow\Traits\CanBeVoted;
 
 class Post extends Model
 {
-    use CanBeLiked, CanBeFavorited;
+    use CanBeLiked, CanBeFavorited, CanBeVoted;
 }
 ```
 
@@ -174,6 +177,33 @@ $user->subscriptions(App\Post::class)->get()
 ```php
 $object->subscribers() // or $object->subscribers 
 $object->isSubscribedBy($user)
+```
+
+### Vote
+
+#### `\Overtrue\LaravelFollow\Traits\CanVote`
+
+```php
+$user->vote($target) // Vote with 'upvote' for default
+$user->upvote($target)
+$user->downvote($target)
+$user->cancelVote($target)
+$user->hasUpvoted($target)
+$user->hasDownvoted($target)
+$user->votes(App\Post::class)->get()
+$user->upvotes(App\Post::class)->get()
+$user->downvotes(App\Post::class)->get()
+```
+
+#### `\Overtrue\LaravelFollow\Traits\CanBeVoted`
+
+```php
+$object->voters()->get()
+$object->upvoters()->get()
+$object->downvoters()->get()
+$object->isVotedBy($user)
+$object->isUpvotedBy($user)
+$object->isDownvotedBy($user)
 ```
 
 ### Parameters
