@@ -47,8 +47,8 @@ class FollowRelation extends Model
     public function scopePopular($query, $type = null)
     {
         $query->select('followable_id', 'followable_type', \DB::raw('COUNT(*) AS count'))
-                     ->groupBy('followable_id', 'followable_type')
-                     ->orderByDesc('count');
+                        ->groupBy('followable_id', 'followable_type')
+                        ->orderByDesc('count');
 
         if ($type) {
             $query->where('followable_type', $this->normalizeFollowableType($type));
