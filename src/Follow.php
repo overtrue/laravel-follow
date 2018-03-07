@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -72,6 +72,7 @@ class Follow
      * @param string                                           $class
      *
      * @throws \Exception
+     *
      * @return array
      */
     public static function attachRelations(Model $model, $relation, $targets, $class)
@@ -103,6 +104,7 @@ class Follow
      * @param string                                           $class
      *
      * @throws \Exception
+     *
      * @return array
      */
     public static function toggleRelations(Model $model, $relation, $targets, $class)
@@ -118,6 +120,7 @@ class Follow
      * @param string                                              $class
      *
      * @throws \Exception
+     *
      * @return \stdClass
      */
     public static function attachPivotsFromRelation(MorphToMany $morph, $targets, $class)
