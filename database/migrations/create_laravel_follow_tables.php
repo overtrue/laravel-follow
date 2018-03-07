@@ -20,13 +20,14 @@ class CreateLaravelFollowTables extends Migration
     public function up()
     {
         Schema::create(config('follow.followable_table', 'followables'), function (Blueprint $table) {
-            $table->unsignedInteger('user_id');
+            $userForeignKey = config('follow.users_table_foreign_key', 'user_id');
+            $table->unsignedInteger($userForeignKey);
             $table->unsignedInteger('followable_id');
             $table->string('followable_type')->index();
-            $table->string('relation')->default('follow')->comment('folllow/like/subscribe/favorite/');
+            $table->string('relation')->default('follow')->comment('folllow/like/subscribe/favorite/upvote/downvote');
             $table->timestamp('created_at');
 
-            $table->foreign('user_id')
+            $table->foreign($userForeignKey)
                 ->references(config('follow.users_table_primary_key', 'id'))
                 ->on(config('follow.users_table_name', 'users'))
                 ->onUpdate('cascade')
