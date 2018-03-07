@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -34,6 +34,22 @@ class Follow
     const RELATION_DOWNVOTE = 'downvote';
 
     /**
+     * @var array
+     */
+    protected static $relationMap = [
+        'followings' => 'follow',
+        'followers' => 'follow',
+        'favoriters' => 'favorite',
+        'favorites' => 'favorite',
+        'subscriptions' => 'subscribe',
+        'subscribers' => 'subscribe',
+        'upvotes' => 'upvote',
+        'upvoters' => 'upvote',
+        'downvotes' => 'downvote',
+        'downvoters' => 'downvote',
+    ];
+
+    /**
      * @param \Illuminate\Database\Eloquent\Model              $model
      * @param string                                           $relation
      * @param array|string|\Illuminate\Database\Eloquent\Model $target
@@ -55,6 +71,7 @@ class Follow
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                           $class
      *
+     * @throws \Exception
      * @return array
      */
     public static function attachRelations(Model $model, $relation, $targets, $class)
@@ -85,6 +102,7 @@ class Follow
      * @param array|string|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                           $class
      *
+     * @throws \Exception
      * @return array
      */
     public static function toggleRelations(Model $model, $relation, $targets, $class)
@@ -99,6 +117,7 @@ class Follow
      * @param array|string|\Illuminate\Database\Eloquent\Model    $targets
      * @param string                                              $class
      *
+     * @throws \Exception
      * @return \stdClass
      */
     public static function attachPivotsFromRelation(MorphToMany $morph, $targets, $class)
@@ -149,12 +168,10 @@ class Follow
      */
     protected static function getRelationTypeFromRelation(MorphToMany $relation)
     {
-        $wheres = array_pluck($relation->getQuery()->getQuery()->wheres, 'value', 'column');
-
-        if (empty($wheres['followables.relation'])) {
+        if (!\array_key_exists(self::$relationMap, $relation->getRelationName())) {
             throw new \Exception('Invalid relation definition.');
         }
 
-        return $wheres['followables.relation'];
+        return self::$relationMap[$relation->getRelationName()];
     }
 }

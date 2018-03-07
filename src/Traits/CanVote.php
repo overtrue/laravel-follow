@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -38,7 +38,6 @@ trait CanVote
      * Upvote an item or items.
      *
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
-     * @param string                                        $type
      * @param string                                        $class
      *
      * @return array
@@ -52,7 +51,6 @@ trait CanVote
      * Downvote an item or items.
      *
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
-     * @param string                                        $type
      * @param string                                        $class
      *
      * @return array
@@ -68,7 +66,7 @@ trait CanVote
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
-     * @return array
+     * @return \Overtrue\LaravelFollow\Traits\CanVote
      */
     public function cancelVote($targets, $class = __CLASS__)
     {
