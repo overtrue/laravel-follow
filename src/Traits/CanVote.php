@@ -26,6 +26,7 @@ trait CanVote
      * @param string                                        $class
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function vote($targets, $type = 'upvote', $class = __CLASS__)
@@ -42,6 +43,7 @@ trait CanVote
      * @param string                                        $class
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function upvote($targets, $class = __CLASS__)
@@ -56,6 +58,7 @@ trait CanVote
      * @param string                                        $class
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function downvote($targets, $class = __CLASS__)

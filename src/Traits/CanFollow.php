@@ -25,6 +25,7 @@ trait CanFollow
      * @param string                                        $class
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function follow($targets, $class = __CLASS__)
@@ -52,6 +53,7 @@ trait CanFollow
      * @param string                                        $class
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function toggleFollow($targets, $class = __CLASS__)
