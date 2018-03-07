@@ -43,20 +43,8 @@ class FollowTest extends TestCase
 
     public function testAttachRelations()
     {
-        $builder = new \stdClass();
-        $relationType = 'follow';
-        $builder->wheres = [
-            [
-                'column' => 'age',
-                'value' => 18,
-            ],
-            [
-                'column' => 'followables.relation',
-                'value' => $relationType,
-            ],
-        ];
         $morph = \Mockery::mock(MorphToMany::class);
-        $morph->shouldReceive('getQuery->getQuery')->andReturn($builder);
+        $morph->shouldReceive('getRelationName')->andReturn('followings');
 
         $targets = [1, 2];
         $class = 'App\User';
@@ -70,20 +58,8 @@ class FollowTest extends TestCase
 
     public function testAttachRelationsWithoutInvalidRelationDefinition()
     {
-        $builder = new \stdClass();
-        $relationType = 'follow';
-        $builder->wheres = [
-            [
-                'column' => 'age',
-                'value' => 18,
-            ],
-            [
-                'column' => 'followables.relation',
-                'value' => '',
-            ],
-        ];
         $morph = \Mockery::mock(MorphToMany::class);
-        $morph->shouldReceive('getQuery->getQuery')->andReturn($builder);
+        $morph->shouldReceive('getRelationName')->andReturn('undefined');
 
         $targets = [1, 2];
         $class = 'App\User';
@@ -111,21 +87,8 @@ class FollowTest extends TestCase
     {
         $targets = [1, 2];
         $class = 'App\Foo';
-
-        $builder = new \stdClass();
-        $relationType = 'follow';
-        $builder->wheres = [
-            [
-                'column' => 'age',
-                'value' => 18,
-            ],
-            [
-                'column' => 'followables.relation',
-                'value' => $relationType,
-            ],
-        ];
         $morph = \Mockery::mock(MorphToMany::class);
-        $morph->shouldReceive('getQuery->getQuery')->andReturn($builder);
+        $morph->shouldReceive('getRelationName')->andReturn('followings');
 
         $model = \Mockery::mock(Model::class);
         $model->shouldReceive('followings')->with()->andReturn($morph)->once();
@@ -137,27 +100,15 @@ class FollowTest extends TestCase
 
     public function testAttachPivotsFromRelation()
     {
-        $builder = new \stdClass();
-        $relationType = 'follow';
-        $builder->wheres = [
-            [
-                'column' => 'age',
-                'value' => 18,
-            ],
-            [
-                'column' => 'followables.relation',
-                'value' => $relationType,
-            ],
-        ];
         $morph = \Mockery::mock(MorphToMany::class);
-        $morph->shouldReceive('getQuery->getQuery')->andReturn($builder);
+        $morph->shouldReceive('getRelationName')->andReturn('followings');
 
         $targets = Follow::attachPivotsFromRelation($morph, [1, 34], 'App\Foo');
 
         $this->assertArrayHasKey(1, $targets->targets);
         $this->assertArrayHasKey(34, $targets->targets);
-        $this->assertSame($relationType, $targets->targets[1]['relation']);
-        $this->assertSame($relationType, $targets->targets[34]['relation']);
+        $this->assertSame('follow', $targets->targets[1]['relation']);
+        $this->assertSame('follow', $targets->targets[34]['relation']);
         $this->assertStringStartsWith(date('Y-m-d H:i:'), $targets->targets[34]['created_at']);
         $this->assertRegExp('/^\d{4}(\-\d{2}){2} (\d{2}:){2}\d{2}$/', $targets->targets[34]['created_at']);
     }

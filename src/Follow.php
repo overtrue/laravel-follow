@@ -171,7 +171,7 @@ class Follow
      */
     protected static function getRelationTypeFromRelation(MorphToMany $relation)
     {
-        if (!\array_key_exists(self::$relationMap, $relation->getRelationName())) {
+        if (!\array_key_exists($relation->getRelationName(), self::$relationMap)) {
             throw new \Exception('Invalid relation definition.');
         }
 
