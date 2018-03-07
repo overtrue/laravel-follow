@@ -79,7 +79,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     public function tearDown()
     {
         parent::tearDown();
-        unlink(__DIR__.'/../tests/database/migrations/create_laravel_follow_tables.php');
+        unlink(__DIR__.'/database/migrations/create_laravel_follow_tables.php');
     }
 
     /**
