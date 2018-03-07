@@ -26,6 +26,11 @@ return [
     'users_table_primary_key' => 'id',
 
     /*
+     * Foreign key of users table.
+     */
+    'users_table_foreign_key' => 'user_id',
+
+    /*
      * Table name of followable relations.
      */
     'followable_table' => 'followables',
