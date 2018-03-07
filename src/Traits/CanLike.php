@@ -25,6 +25,7 @@ trait CanLike
      * @param string                                        $class
      *
      * @return array
+     * @throws \Exception
      */
     public function like($targets, $class = __CLASS__)
     {
@@ -51,6 +52,7 @@ trait CanLike
      * @param string                                        $class
      *
      * @return array
+     * @throws \Exception
      */
     public function toggleLike($targets, $class = __CLASS__)
     {
