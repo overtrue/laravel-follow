@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
