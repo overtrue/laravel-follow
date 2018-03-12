@@ -92,7 +92,7 @@ trait CanVote
      */
     public function hasUpvoted($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'upvote', $target, $class);
+        return Follow::isRelationExists($this, 'upvotes', $target, $class);
     }
 
     /**
@@ -105,7 +105,7 @@ trait CanVote
      */
     public function hasDownvoted($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'downvote', $target, $class);
+        return Follow::isRelationExists($this, 'downvotes', $target, $class);
     }
 
     /**
