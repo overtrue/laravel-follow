@@ -13,6 +13,7 @@ namespace Overtrue\LaravelFollow;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use stdClass;
 
@@ -21,6 +22,8 @@ use stdClass;
  */
 class Follow
 {
+    use SoftDeletes;
+    
     const RELATION_LIKE = 'like';
 
     const RELATION_FOLLOW = 'follow';
