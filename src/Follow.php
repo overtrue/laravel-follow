@@ -23,7 +23,7 @@ use stdClass;
 class Follow
 {
     use SoftDeletes;
-    
+
     const RELATION_LIKE = 'like';
 
     const RELATION_FOLLOW = 'follow';

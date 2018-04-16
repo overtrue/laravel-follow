@@ -22,7 +22,7 @@ use InvalidArgumentException;
 class FollowRelation extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * @var string
      */
