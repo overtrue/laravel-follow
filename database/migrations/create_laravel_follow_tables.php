@@ -25,7 +25,8 @@ class CreateLaravelFollowTables extends Migration
             $table->unsignedInteger('followable_id');
             $table->string('followable_type')->index();
             $table->string('relation')->default('follow')->comment('folllow/like/subscribe/favorite/upvote/downvote');
-            $table->timestamp('created_at');
+            $table->softDeletes();
+            $table->timestamps();
 
             $table->foreign($userForeignKey)
                 ->references(config('follow.users_table_primary_key', 'id'))
