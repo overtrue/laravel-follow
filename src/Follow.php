@@ -40,6 +40,9 @@ class Follow
      * @var array
      */
     protected static $relationMap = [
+        'likes' => 'like',
+        'likers' => 'like',
+        'fans' => 'like',
         'followings' => 'follow',
         'followers' => 'follow',
         'favoriters' => 'favorite',
