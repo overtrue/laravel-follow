@@ -265,6 +265,59 @@ $relations = FollowRelation::popular(App\Post::class)->paginate(15);
 
 ```
 
+### Events
+
+Four BelongsToMany methods dispatches events from this package : 
+
+**attach()**  
+Dispatches **one** **pivotAttaching** and **one** **pivotAttached** event.  
+Even when more rows are added only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable, and the changed row ids with attributes in the $pivotIdsAttributes variable.   
+
+**detach()**  
+Dispatches **one** **pivotDetaching** and **one** **pivotDetached** event.  
+Even when more rows are deleted only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable.   
+
+**updateExistingPivot()**  
+Dispatches **one** **pivotUpdating** and **one** **pivotUpdated** event.   
+You can change only one row in the pivot table with updateExistingPivot.   
+
+**sync()**  
+Dispatches **more** **pivotAttaching** and **more** **pivotAttached** events, depending on how many rows are added in the pivot table. These events are not dispatched if nothing is attached.  
+Dispatches **one** **pivotDetaching** and **one** **pivotDetached** event, but you can see all deleted ids in the $pivotIds variable. This event is not dispatched if nothing is detached.  
+E.g. when you call sync() if two rows are added and two are deleted **two** **pivotAttaching** and **two** **pivotAttached** events and **one** **pivotDetaching** and **one** **pivotDetached** event will be dispatched.  
+If sync() is called but rows are not added or deleted events are not dispatched.  
+
+
+#### Usage
+
+```php
+use Overtrue\LaravelFollow\FollowRelation;
+
+FollowRelation::pivotAttaching(function($relation) {
+    //...
+});
+
+FollowRelation::pivotAttached(function($relation) {
+    //...
+});
+
+FollowRelation::pivotUpdating(function($relation) {
+    //...
+});
+
+FollowRelation::pivotUpdated(function($relation) {
+    //...
+});
+
+FollowRelation::pivotDetaching(function($relation) {
+    //...
+});
+
+FollowRelation::pivotDetached(function($relation) {
+    //...
+});
+```
+
 ## License
 
 MIT
