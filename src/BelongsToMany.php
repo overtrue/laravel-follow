@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the overtrue/laravel-follow
+ *
+ * (c) overtrue <i@overtrue.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Overtrue\LaravelFollow;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as BaseBelongsToMany;
@@ -9,10 +18,9 @@ class BelongsToMany extends BaseBelongsToMany
     /**
      * Attach a model to the parent.
      *
-     * @param  mixed  $id
-     * @param  array  $attributes
-     * @param  bool   $touch
-     * @return void
+     * @param mixed $id
+     * @param array $attributes
+     * @param bool  $touch
      */
     public function attach($id, array $attributes = [], $touch = true)
     {
@@ -20,7 +28,7 @@ class BelongsToMany extends BaseBelongsToMany
             $id => $attributes,
         ]);
 
-        if ($this->parent->firePivotAttachingEvent() === false) {
+        if (false === $this->parent->firePivotAttachingEvent()) {
             return false;
         }
 
@@ -34,8 +42,9 @@ class BelongsToMany extends BaseBelongsToMany
     /**
      * Detach models from the relationship.
      *
-     * @param  mixed  $ids
-     * @param  bool  $touch
+     * @param mixed $ids
+     * @param bool  $touch
+     *
      * @return int
      */
     public function detach($ids = null, $touch = true)
@@ -52,7 +61,7 @@ class BelongsToMany extends BaseBelongsToMany
 
         $this->parent->setPivotChanges('detach', $this->getRelationName(), $idsWithAttributes);
 
-        if ($this->parent->firePivotDetachingEvent() === false) {
+        if (false === $this->parent->firePivotDetachingEvent()) {
             return false;
         }
 
@@ -66,9 +75,10 @@ class BelongsToMany extends BaseBelongsToMany
     /**
      * Update an existing pivot record on the table.
      *
-     * @param  mixed  $id
-     * @param  array  $attributes
-     * @param  bool   $touch
+     * @param mixed $id
+     * @param array $attributes
+     * @param bool  $touch
+     *
      * @return int
      */
     public function updateExistingPivot($id, array $attributes, $touch = true)
@@ -77,7 +87,7 @@ class BelongsToMany extends BaseBelongsToMany
             $id => $attributes,
         ]);
 
-        if ($this->parent->firePivotUpdatingEvent() === false) {
+        if (false === $this->parent->firePivotUpdatingEvent()) {
             return false;
         }
 
