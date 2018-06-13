@@ -15,6 +15,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Overtrue\LaravelFollow\Events\RelationAttached;
+use Overtrue\LaravelFollow\Events\RelationAttaching;
+use Overtrue\LaravelFollow\Events\RelationDetached;
+use Overtrue\LaravelFollow\Events\RelationDetaching;
+use Overtrue\LaravelFollow\Events\RelationToggled;
+use Overtrue\LaravelFollow\Events\RelationToggling;
 use stdClass;
 
 /**
@@ -36,10 +42,7 @@ class Follow
 
     const RELATION_DOWNVOTE = 'downvote';
 
-    /**
-     * @var array
-     */
-    protected static $relationMap = [
+    const RELATION_TYPES = [
         'likes' => 'like',
         'likers' => 'like',
         'fans' => 'like',
@@ -83,7 +86,15 @@ class Follow
      */
     public static function attachRelations(Model $model, $relation, $targets, $class)
     {
+        if (false === \event(new RelationAttaching($model, $relation, $targets, $class))) {
+            return false;
+        }
+
         $targets = self::attachPivotsFromRelation($model->{$relation}(), $targets, $class);
+
+        if (false === \event(new RelationAttached($model, $relation, $targets, $class))) {
+            return false;
+        }
 
         return $model->{$relation}($targets->classname)->sync($targets->targets, false);
     }
@@ -98,7 +109,15 @@ class Follow
      */
     public static function detachRelations(Model $model, $relation, $targets, $class)
     {
+        if (false === \event(new RelationDetaching($model, $relation, $targets, $class))) {
+            return false;
+        }
+
         $targets = self::formatTargets($targets, $class);
+
+        if (false === \event(new RelationDetached($model, $relation, $targets, $class))) {
+            return false;
+        }
 
         return $model->{$relation}($targets->classname)->detach($targets->ids);
     }
@@ -115,7 +134,15 @@ class Follow
      */
     public static function toggleRelations(Model $model, $relation, $targets, $class)
     {
+        if (false === \event(new RelationToggling($model, $relation, $targets, $class))) {
+            return false;
+        }
+
         $targets = self::attachPivotsFromRelation($model->{$relation}(), $targets, $class);
+
+        if (false === \event(new RelationToggled($model, $relation, $targets, $class))) {
+            return false;
+        }
 
         return $model->{$relation}($targets->classname)->toggle($targets->targets);
     }
@@ -177,10 +204,10 @@ class Follow
      */
     protected static function getRelationTypeFromRelation(MorphToMany $relation)
     {
-        if (!\array_key_exists($relation->getRelationName(), self::$relationMap)) {
+        if (!\array_key_exists($relation->getRelationName(), self::RELATION_TYPES)) {
             throw new \Exception('Invalid relation definition.');
         }
 
-        return self::$relationMap[$relation->getRelationName()];
+        return self::RELATION_TYPES[$relation->getRelationName()];
     }
 }
