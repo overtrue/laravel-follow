@@ -10,7 +10,6 @@
  */
 
 namespace Overtrue\LaravelFollow\Events;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class RelationToggled.
@@ -20,7 +19,9 @@ use Illuminate\Database\Eloquent\Model;
 class RelationToggled extends Event
 {
     public $results = [];
+
     public $attached = [];
+
     public $detached = [];
 
     /**
