@@ -283,6 +283,16 @@ Event::listen(\Overtrue\LaravelFollow\RelationAttached::class, function($event) 
 });
 ```
 
+# About toggled event.
+
+There has a extra properties for `Overtrue\LaravelFollow\RelationToggled` event.
+
+```php
+$event->results; // ['attached' => [1, 2, 3], 'detached' => [5, 6]]
+$event->attached; // [1, 2, 3]
+$event->detached; // [5, 6]
+```
+
 ## License
 
 MIT

@@ -140,11 +140,13 @@ class Follow
 
         $targets = self::attachPivotsFromRelation($model->{$relation}(), $targets, $class);
 
-        if (false === \event(new RelationToggled($model, $relation, $targets, $class))) {
+        $results = $model->{$relation}($targets->classname)->toggle($targets->targets);
+
+        if (false === \event(new RelationToggled($model, $relation, $targets, $class, $results))) {
             return false;
         }
 
-        return $model->{$relation}($targets->classname)->toggle($targets->targets);
+        return $results;
     }
 
     /**
