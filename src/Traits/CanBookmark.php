@@ -43,7 +43,7 @@ trait CanBookmark
      */
     public function unbookmark($targets, $class = __CLASS__)
     {
-        return Follow::detachRelations($this, 'bookmarkings', $targets, $class);
+        return Follow::detachRelations($this, 'bookmarks', $targets, $class);
     }
 
     /**
@@ -75,7 +75,7 @@ trait CanBookmark
     }
 
     /**
-     * Return item bookmarkings.
+     * Return item bookmarks.
      *
      * @param string $class
      *
