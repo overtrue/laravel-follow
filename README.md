@@ -128,15 +128,15 @@ $object->isFollowedBy($user)
 $user->bookmark($targets)
 $user->unbookmark($targets)
 $user->toggleBookmark($targets)
-$user->bookmarkings()->get() // App\User:class
-$user->bookmarkings(App\Post::class)->get()
-$user->isBookmarking($target)
+$user->hasBookmarked($target)
+$user->bookmarks()->get() // App\User:class
+$user->bookmarks(App\Post::class)->get()
 ```
 
 #### `\Overtrue\LaravelFollow\Traits\CanBeBookmarked`
 
 ```php
-$object->bookmarkers()->get()
+$object->bookmarkers()->get() // or $object->bookmarkers 
 $object->isBookmarkedBy($user)
 ```
 
