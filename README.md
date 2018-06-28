@@ -18,6 +18,7 @@
 - Support actions:
     - Follow
     - Like
+    - Bookmark
     - Subscribe
     - Favorite
     - Vote (Upvote & Downvote)
@@ -79,7 +80,7 @@ use Overtrue\LaravelFollow\Traits\CanVote;
 
 class User extends Model
 {
-    use CanFollow, CanLike, CanFavorite, CanSubscribe, CanVote;
+    use CanFollow, CanBookmark, CanLike, CanFavorite, CanSubscribe, CanVote;
 }
 ```
 
@@ -89,10 +90,11 @@ Add `CanBeXXX` Trait to target model, such as 'Post' or 'Music' ...:
 use Overtrue\LaravelFollow\Traits\CanBeLiked;
 use Overtrue\LaravelFollow\Traits\CanBeFavorited;
 use Overtrue\LaravelFollow\Traits\CanBeVoted;
+use Overtrue\LaravelFollow\Traits\CanBookmarked;
 
 class Post extends Model
 {
-    use CanBeLiked, CanBeFavorited, CanBeVoted;
+    use CanBeLiked, CanBeFavorited, CanBeVoted, CanBeBookmarked;
 }
 ```
 
@@ -116,6 +118,26 @@ $user->isFollowing($target)
 ```php
 $object->followers()->get()
 $object->isFollowedBy($user)
+```
+
+### Bookmark
+
+#### `\Overtrue\LaravelFollow\Traits\CanBookmark`
+
+```php
+$user->bookmark($targets)
+$user->unbookmark($targets)
+$user->toggleBookmark($targets)
+$user->bookmarkings()->get() // App\User:class
+$user->bookmarkings(App\Post::class)->get()
+$user->isBookmarking($target)
+```
+
+#### `\Overtrue\LaravelFollow\Traits\CanBeBookmarked`
+
+```php
+$object->bookmarkers()->get()
+$object->isBookmarkedBy($user)
 ```
 
 ### Like
