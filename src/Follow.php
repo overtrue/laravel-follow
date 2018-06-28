@@ -34,6 +34,8 @@ class Follow
 
     const RELATION_FOLLOW = 'follow';
 
+    const RELATION_BOOKMARK = 'bookmark';
+
     const RELATION_SUBSCRIBE = 'subscribe';
 
     const RELATION_FAVORITE = 'favorite';
@@ -50,6 +52,8 @@ class Follow
         'followers' => 'follow',
         'favoriters' => 'favorite',
         'favorites' => 'favorite',
+        'bookmarkings' => 'bookmark',
+        'bookmarkers' => 'bookmark',
         'subscriptions' => 'subscribe',
         'subscribers' => 'subscribe',
         'upvotes' => 'upvote',
