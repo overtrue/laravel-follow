@@ -30,7 +30,7 @@ trait CanBookmark
      */
     public function bookmark($targets, $class = __CLASS__)
     {
-        return Follow::attachRelations($this, 'bookmarkings', $targets, $class);
+        return Follow::attachRelations($this, 'bookmarks', $targets, $class);
     }
 
     /**
@@ -58,20 +58,20 @@ trait CanBookmark
      */
     public function toggleBookmark($targets, $class = __CLASS__)
     {
-        return Follow::toggleRelations($this, 'bookmarkings', $targets, $class);
+        return Follow::toggleRelations($this, 'bookmarks', $targets, $class);
     }
 
     /**
-     * Check if user is bookmarking given item.
+     * Check if user is bookmarked given item.
      *
      * @param int|array|\Illuminate\Database\Eloquent\Model $target
      * @param string                                        $class
      *
      * @return bool
      */
-    public function isBookmarking($target, $class = __CLASS__)
+    public function hasBookmarked($target, $class = __CLASS__)
     {
-        return Follow::isRelationExists($this, 'bookmarkings', $target, $class);
+        return Follow::isRelationExists($this, 'bookmarks', $target, $class);
     }
 
     /**
@@ -81,7 +81,7 @@ trait CanBookmark
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function bookmarkings($class = __CLASS__)
+    public function bookmarks($class = __CLASS__)
     {
         return $this->morphedByMany($class, config('follow.morph_prefix'), config('follow.followable_table'))
                     ->wherePivot('relation', '=', Follow::RELATION_BOOKMARK)
