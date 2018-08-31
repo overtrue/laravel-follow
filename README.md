@@ -110,6 +110,7 @@ $user->unfollow($targets)
 $user->toggleFollow($targets)
 $user->followings()->get() // App\User:class
 $user->followings(App\Post::class)->get()
+$user->areFollowingEachOther($anotherUser);
 $user->isFollowing($target)
 ```
 
