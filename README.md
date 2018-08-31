@@ -25,6 +25,11 @@
 
 ## Installation
 
+### Required
+
+- PHP 7.0 +
+- Laravel 5.5 +
+
 You can install the package using composer
 
 ```sh
