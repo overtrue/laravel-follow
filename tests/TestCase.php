@@ -12,9 +12,6 @@
 namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Artisan;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {

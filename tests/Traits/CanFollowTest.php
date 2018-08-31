@@ -66,7 +66,7 @@ class CanFollowTest extends TestCase
 
         $user->follow($other);
 
-       $this->assertCount(1, $user->followings(Other::class)->get());
+        $this->assertCount(1, $user->followings(Other::class)->get());
     }
 
     public function test_unfollow_other()

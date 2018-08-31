@@ -99,14 +99,13 @@ trait CanFollow
     {
         $table = config('follow.followable_table');
         $foreignKey = config('follow.users_table_foreign_key', 'user_id');
-        $targetTable = (new $class)->getTable();
+        $targetTable = (new $class())->getTable();
 
         return $this->morphedByMany($class, config('follow.morph_prefix'), $table)
                     ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
                     ->withPivot('followable_type', 'relation', 'created_at')
                     ->addSelect("{$targetTable}.*", DB::raw("pivot_followables.{$foreignKey} IS NOT NULL AS pivot_each_other"))
-                    ->leftJoin("{$table} as pivot_followables", function($join) use ($table, $class, $foreignKey) {
-
+                    ->leftJoin("{$table} as pivot_followables", function ($join) use ($table, $class, $foreignKey) {
                         $join->on('pivot_followables.followable_type', '=', DB::raw(\addcslashes("'{$class}'", '\\')))
                             ->on('pivot_followables.followable_id', '=', "{$table}.{$foreignKey}")
                             ->on("pivot_followables.{$foreignKey}", '=', "{$table}.followable_id");
