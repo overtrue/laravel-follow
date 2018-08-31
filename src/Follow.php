@@ -73,9 +73,10 @@ class Follow
     public static function isRelationExists(Model $model, $relation, $target, $class = null)
     {
         $target = self::formatTargets($target, $class ?: config('follow.user_model'));
+        $field = self::tablePrefixedField($class ? 'followable_id' : config('follow.users_table_foreign_key', 'user_id'));
 
         return $model->{$relation}($target->classname)
-                        ->where($class ? 'followable_id' : config('follow.users_table_foreign_key', 'user_id'), head($target->ids))->exists();
+                        ->where($field, head($target->ids))->exists();
     }
 
     /**
@@ -215,5 +216,15 @@ class Follow
         }
 
         return self::RELATION_TYPES[$relation->getRelationName()];
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return string
+     */
+    protected static function tablePrefixedField($field)
+    {
+        return \sprintf('%s.%s', config('follow.followable_table'), $field);
     }
 }

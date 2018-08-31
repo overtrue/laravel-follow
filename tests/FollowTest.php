@@ -24,7 +24,7 @@ class FollowTest extends TestCase
         $target = 12;
         $model = \Mockery::mock(Model::class);
         $model->shouldReceive('followings')->with($class)->andReturnSelf()->once();
-        $model->shouldReceive('where')->with('followable_id', $target)->andReturnSelf()->once();
+        $model->shouldReceive('where')->with('followables.followable_id', $target)->andReturnSelf()->once();
         $model->shouldReceive('exists')->withNoArgs()->andReturn(true)->once();
 
         $this->assertTrue(Follow::isRelationExists($model, 'followings', $target, $class));
@@ -35,7 +35,7 @@ class FollowTest extends TestCase
         $target = 12;
         $model = \Mockery::mock(Model::class);
         $model->shouldReceive('followings')->with('App\User')->andReturnSelf()->once();
-        $model->shouldReceive('where')->with('user_id', $target)->andReturnSelf()->once();
+        $model->shouldReceive('where')->with('followables.user_id', $target)->andReturnSelf()->once();
         $model->shouldReceive('exists')->withNoArgs()->andReturn(true)->once();
 
         $this->assertTrue(Follow::isRelationExists($model, 'followings', $target));
