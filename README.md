@@ -82,6 +82,7 @@ use Overtrue\LaravelFollow\Traits\CanLike;
 use Overtrue\LaravelFollow\Traits\CanFavorite;
 use Overtrue\LaravelFollow\Traits\CanSubscribe;
 use Overtrue\LaravelFollow\Traits\CanVote;
+use Overtrue\LaravelFollow\Traits\CanBookmark;
 
 class User extends Model
 {
@@ -95,7 +96,7 @@ Add `CanBeXXX` Trait to target model, such as 'Post' or 'Music' ...:
 use Overtrue\LaravelFollow\Traits\CanBeLiked;
 use Overtrue\LaravelFollow\Traits\CanBeFavorited;
 use Overtrue\LaravelFollow\Traits\CanBeVoted;
-use Overtrue\LaravelFollow\Traits\CanBookmarked;
+use Overtrue\LaravelFollow\Traits\CanBeBookmarked;
 
 class Post extends Model
 {
