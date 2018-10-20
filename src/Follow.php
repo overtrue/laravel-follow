@@ -70,8 +70,13 @@ class Follow
     {
         $target = self::formatTargets($target, $class ?: config('follow.user_model'));
 
-        return $model->{$relation}($target->classname)
-                        ->where($class ? 'followable_id' : config('follow.users_table_foreign_key', 'user_id'), head($target->ids))->exists();
+        $relationKey = $class ? 'followable_id' : config('follow.users_table_foreign_key', 'user_id');
+
+        if ($model->relationLoaded($relation)) {
+            return $model->{$relation}->where($relationKey, head($target->ids))->isNotEmpty();
+        }
+
+        return $model->{$relation}($target->classname)->where($relationKey, head($target->ids))->exists();
     }
 
     /**
