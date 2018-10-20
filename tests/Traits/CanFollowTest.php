@@ -89,4 +89,17 @@ class CanFollowTest extends TestCase
 
         $this->assertTrue($user->isFollowing($other));
     }
+
+    public function test_following_each_other()
+    {
+        $user1 = User::find(1);
+        $user2 = User::find(2);
+
+        $user1->follow($user2);
+
+        $this->assertFalse($user1->areFollowingEachOther($user2));
+
+        $user2->follow($user1);
+        $this->assertTrue($user1->areFollowingEachOther($user2));
+    }
 }

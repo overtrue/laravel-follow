@@ -20,20 +20,13 @@ class FollowServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $root = dirname(__DIR__);
+        $this->publishes([
+            realpath(__DIR__.'/../config/follow.php') => config_path('follow.php'),
+        ], 'config');
 
-        if (!file_exists(config_path('follow.php'))) {
-            $this->publishes([
-                $root.'/config/follow.php' => config_path('follow.php'),
-            ], 'config');
-        }
-
-        if (!class_exists('CreateLaravelFollowTables')) {
-            $datePrefix = date('Y_m_d_His');
-            $this->publishes([
-                $root.'/database/migrations/create_laravel_follow_tables.php' => database_path("/migrations/{$datePrefix}_create_laravel_follow_tables.php"),
-            ], 'migrations');
-        }
+        $this->publishes([
+            realpath(__DIR__.'/../database/migrations') => database_path('migrations'),
+        ], 'migrations');
     }
 
     /**
@@ -41,6 +34,6 @@ class FollowServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(dirname(__DIR__).'/config/follow.php', 'follow');
+        $this->mergeConfigFrom(realpath(__DIR__.'/../config/follow.php'), 'follow');
     }
 }

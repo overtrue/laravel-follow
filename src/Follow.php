@@ -34,6 +34,8 @@ class Follow
 
     const RELATION_FOLLOW = 'follow';
 
+    const RELATION_BOOKMARK = 'bookmark';
+
     const RELATION_SUBSCRIBE = 'subscribe';
 
     const RELATION_FAVORITE = 'favorite';
@@ -50,6 +52,8 @@ class Follow
         'followers' => 'follow',
         'favoriters' => 'favorite',
         'favorites' => 'favorite',
+        'bookmarkers' => 'bookmark',
+        'bookmarks' => 'bookmark',
         'subscriptions' => 'subscribe',
         'subscribers' => 'subscribe',
         'upvotes' => 'upvote',
@@ -71,6 +75,8 @@ class Follow
         $target = self::formatTargets($target, $class ?: config('follow.user_model'));
 
         $relationKey = $class ? 'followable_id' : config('follow.users_table_foreign_key', 'user_id');
+
+        $relationKey = self::tablePrefixedField($relationKey);
 
         if ($model->relationLoaded($relation)) {
             return $model->{$relation}->where($relationKey, head($target->ids))->isNotEmpty();
@@ -216,5 +222,15 @@ class Follow
         }
 
         return self::RELATION_TYPES[$relation->getRelationName()];
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return string
+     */
+    protected static function tablePrefixedField($field)
+    {
+        return \sprintf('%s.%s', config('follow.followable_table'), $field);
     }
 }

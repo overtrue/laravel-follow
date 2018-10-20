@@ -12,12 +12,9 @@
 namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
-    use DatabaseTransactions;
-
     protected $config;
 
     /**
@@ -41,7 +38,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     /**
      * Setup DB before each test.
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -64,21 +61,23 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $fileSystem = new Filesystem();
 
         $fileSystem->copy(
-            __DIR__.'/../database/migrations/create_laravel_follow_tables.php',
-            __DIR__.'/../tests/database/migrations/create_laravel_follow_tables.php'
+            __DIR__.'/../database/migrations/2018_06_29_032244_create_laravel_follow_tables.php',
+            __DIR__.'/database/migrations/create_laravel_follow_tables.php'
         );
 
-        foreach ($fileSystem->files(__DIR__.'/../tests/database/migrations') as $file) {
+        foreach ($fileSystem->files(__DIR__.'/database/migrations') as $file) {
             $fileSystem->requireOnce($file);
         }
+
+        (new \CreateLaravelFollowTables())->up();
         (new \CreateUsersTable())->up();
         (new \CreateOthersTable())->up();
-        (new \CreateLaravelFollowTables())->up();
     }
 
     public function tearDown()
     {
         parent::tearDown();
+
         unlink(__DIR__.'/database/migrations/create_laravel_follow_tables.php');
     }
 

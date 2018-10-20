@@ -18,11 +18,17 @@
 - Support actions:
     - Follow
     - Like
+    - Bookmark
     - Subscribe
     - Favorite
     - Vote (Upvote & Downvote)
 
 ## Installation
+
+### Required
+
+- PHP 7.0 +
+- Laravel 5.5 +
 
 You can install the package using composer
 
@@ -76,10 +82,11 @@ use Overtrue\LaravelFollow\Traits\CanLike;
 use Overtrue\LaravelFollow\Traits\CanFavorite;
 use Overtrue\LaravelFollow\Traits\CanSubscribe;
 use Overtrue\LaravelFollow\Traits\CanVote;
+use Overtrue\LaravelFollow\Traits\CanBookmark;
 
 class User extends Model
 {
-    use CanFollow, CanLike, CanFavorite, CanSubscribe, CanVote;
+    use CanFollow, CanBookmark, CanLike, CanFavorite, CanSubscribe, CanVote;
 }
 ```
 
@@ -89,10 +96,11 @@ Add `CanBeXXX` Trait to target model, such as 'Post' or 'Music' ...:
 use Overtrue\LaravelFollow\Traits\CanBeLiked;
 use Overtrue\LaravelFollow\Traits\CanBeFavorited;
 use Overtrue\LaravelFollow\Traits\CanBeVoted;
+use Overtrue\LaravelFollow\Traits\CanBeBookmarked;
 
 class Post extends Model
 {
-    use CanBeLiked, CanBeFavorited, CanBeVoted;
+    use CanBeLiked, CanBeFavorited, CanBeVoted, CanBeBookmarked;
 }
 ```
 
@@ -108,6 +116,7 @@ $user->unfollow($targets)
 $user->toggleFollow($targets)
 $user->followings()->get() // App\User:class
 $user->followings(App\Post::class)->get()
+$user->areFollowingEachOther($anotherUser);
 $user->isFollowing($target)
 ```
 
@@ -116,6 +125,26 @@ $user->isFollowing($target)
 ```php
 $object->followers()->get()
 $object->isFollowedBy($user)
+```
+
+### Bookmark
+
+#### `\Overtrue\LaravelFollow\Traits\CanBookmark`
+
+```php
+$user->bookmark($targets)
+$user->unbookmark($targets)
+$user->toggleBookmark($targets)
+$user->hasBookmarked($target)
+$user->bookmarks()->get() // App\User:class
+$user->bookmarks(App\Post::class)->get()
+```
+
+#### `\Overtrue\LaravelFollow\Traits\CanBeBookmarked`
+
+```php
+$object->bookmarkers()->get() // or $object->bookmarkers 
+$object->isBookmarkedBy($user)
 ```
 
 ### Like

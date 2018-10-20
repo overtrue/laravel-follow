@@ -2,10 +2,10 @@
     "name": "overtrue/laravel-follow",
     "description": "Laravel 5 User Based System",
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=7.0"
     },
     "require-dev": {
-        "laravel/laravel": "5.*",
+        "laravel/laravel": "~5.5",
         "phpunit/phpunit": "~5.0",
         "mockery/mockery": "1.0.x-dev"
     },
