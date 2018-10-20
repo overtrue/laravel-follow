@@ -12,7 +12,6 @@
 namespace Overtrue\LaravelFollow\Test;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Overtrue\LaravelFollow\Follow;
 
 class FollowTest extends TestCase
