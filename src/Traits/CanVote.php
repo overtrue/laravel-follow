@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -26,8 +26,8 @@ trait CanVote
      * @param string                                        $class
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function vote($targets, $type = 'upvote', $class = __CLASS__)
     {
@@ -43,8 +43,8 @@ trait CanVote
      * @param string                                        $class
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function upvote($targets, $class = __CLASS__)
     {
@@ -58,8 +58,8 @@ trait CanVote
      * @param string                                        $class
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function downvote($targets, $class = __CLASS__)
     {

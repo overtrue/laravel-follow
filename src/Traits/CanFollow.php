@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -26,8 +26,8 @@ trait CanFollow
      * @param string                                        $class
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function follow($targets, $class = __CLASS__)
     {
@@ -54,8 +54,8 @@ trait CanFollow
      * @param string                                        $class
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function toggleFollow($targets, $class = __CLASS__)
     {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -25,8 +25,8 @@ trait CanLike
      * @param string                                        $class
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function like($targets, $class = __CLASS__)
     {
@@ -53,8 +53,8 @@ trait CanLike
      * @param string                                        $class
      *
      * @throws \Exception
-     * @return array
      *
+     * @return array
      */
     public function toggleLike($targets, $class = __CLASS__)
     {
