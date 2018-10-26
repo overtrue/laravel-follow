@@ -100,8 +100,8 @@ trait CanFollow
         $table = config('follow.followable_table');
         $foreignKey = config('follow.users_table_foreign_key', 'user_id');
         $targetTable = (new $class())->getTable();
-        $tablePrefixedForeignKey = app('db.connection')->wrap(\sprintf('pivot_followables.%s', $foreignKey));
-        $eachOtherKey = app('db.connection')->wrap('pivot_each_other');
+        $tablePrefixedForeignKey = app('db.connection')->getQueryGrammar()->wrap(\sprintf('pivot_followables.%s', $foreignKey));
+        $eachOtherKey = app('db.connection')->getQueryGrammar()->wrap('pivot_each_other');
 
         return $this->morphedByMany($class, config('follow.morph_prefix'), $table)
                     ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)

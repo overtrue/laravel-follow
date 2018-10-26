@@ -42,8 +42,8 @@ trait CanBeFollowed
         $class = \get_class($this);
         $userTable = config('follow.user_table', 'users');
         $foreignKey = config('follow.users_table_foreign_key', 'user_id');
-        $tablePrefixedForeignKey = app('db.connection')->wrap(\sprintf('pivot_followables.%s', $foreignKey));
-        $eachOtherKey = app('db.connection')->wrap('pivot_each_other');
+        $tablePrefixedForeignKey = app('db.connection')->getQueryGrammar()->wrap(\sprintf('pivot_followables.%s', $foreignKey));
+        $eachOtherKey = app('db.connection')->getQueryGrammar()->wrap('pivot_each_other');
 
         return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
             ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
