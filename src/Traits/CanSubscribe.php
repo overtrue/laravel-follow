@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -24,9 +24,9 @@ trait CanSubscribe
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
+     * @throws \Exception
      * @return array
      *
-     * @throws \Exception
      */
     public function subscribe($targets, $class = __CLASS__)
     {
@@ -52,9 +52,9 @@ trait CanSubscribe
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
+     * @throws \Exception
      * @return array
      *
-     * @throws \Exception
      */
     public function toggleSubscribe($targets, $class = __CLASS__)
     {

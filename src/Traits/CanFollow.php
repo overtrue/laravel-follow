@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -25,9 +25,9 @@ trait CanFollow
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
+     * @throws \Exception
      * @return array
      *
-     * @throws \Exception
      */
     public function follow($targets, $class = __CLASS__)
     {
@@ -53,9 +53,9 @@ trait CanFollow
      * @param int|array|\Illuminate\Database\Eloquent\Model $targets
      * @param string                                        $class
      *
+     * @throws \Exception
      * @return array
      *
-     * @throws \Exception
      */
     public function toggleFollow($targets, $class = __CLASS__)
     {
@@ -100,11 +100,13 @@ trait CanFollow
         $table = config('follow.followable_table');
         $foreignKey = config('follow.users_table_foreign_key', 'user_id');
         $targetTable = (new $class())->getTable();
+        $tablePrefixedForeignKey = app('db.connection')->wrap(\sprintf('pivot_followables.%s', $foreignKey));
+        $eachOtherKey = app('db.connection')->wrap('pivot_each_other');
 
         return $this->morphedByMany($class, config('follow.morph_prefix'), $table)
                     ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
                     ->withPivot('followable_type', 'relation', 'created_at')
-                    ->addSelect("{$targetTable}.*", DB::raw("pivot_followables.{$foreignKey} IS NOT NULL AS pivot_each_other"))
+                    ->addSelect("{$targetTable}.*", DB::raw("{$tablePrefixedForeignKey} IS NOT NULL as {$eachOtherKey}"))
                     ->leftJoin("{$table} as pivot_followables", function ($join) use ($table, $class, $foreignKey) {
                         $join->on('pivot_followables.followable_type', '=', DB::raw(\addcslashes("'{$class}'", '\\')))
                             ->on('pivot_followables.followable_id', '=', "{$table}.{$foreignKey}")

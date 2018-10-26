@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -42,15 +42,17 @@ trait CanBeFollowed
         $class = \get_class($this);
         $userTable = config('follow.user_table', 'users');
         $foreignKey = config('follow.users_table_foreign_key', 'user_id');
+        $tablePrefixedForeignKey = app('db.connection')->wrap(\sprintf('pivot_followables.%s', $foreignKey));
+        $eachOtherKey = app('db.connection')->wrap('pivot_each_other');
 
         return $this->morphToMany(config('follow.user_model'), config('follow.morph_prefix'), config('follow.followable_table'))
-                    ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
-                    ->withPivot('followable_type', 'relation', 'created_at')
-                    ->addSelect("{$userTable}.*", DB::raw("pivot_followables.{$foreignKey} IS NOT NULL AS pivot_each_other"))
-                    ->leftJoin("{$table} as pivot_followables", function ($join) use ($table, $class, $foreignKey) {
-                        $join->on('pivot_followables.followable_type', '=', DB::raw(\addcslashes("'{$class}'", '\\')))
-                            ->on('pivot_followables.followable_id', '=', "{$table}.{$foreignKey}")
-                            ->on("pivot_followables.{$foreignKey}", '=', "{$table}.followable_id");
-                    });
+            ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
+            ->withPivot('followable_type', 'relation', 'created_at')
+            ->addSelect("{$userTable}.*", DB::raw("{$tablePrefixedForeignKey} IS NOT NULL as {$eachOtherKey}"))
+            ->leftJoin("{$table} as pivot_followables", function ($join) use ($table, $class, $foreignKey) {
+                $join->on('pivot_followables.followable_type', '=', DB::raw(\addcslashes("'{$class}'", '\\')))
+                    ->on('pivot_followables.followable_id', '=', "{$table}.{$foreignKey}")
+                    ->on("pivot_followables.{$foreignKey}", '=', "{$table}.followable_id");
+            });
     }
 }
