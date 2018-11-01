@@ -106,7 +106,7 @@ trait CanFollow
         return $this->morphedByMany($class, config('follow.morph_prefix'), $table)
                     ->wherePivot('relation', '=', Follow::RELATION_FOLLOW)
                     ->withPivot('followable_type', 'relation', 'created_at')
-                    ->addSelect("{$targetTable}.*", DB::raw("{$tablePrefixedForeignKey} IS NOT NULL as {$eachOtherKey}"))
+                    ->addSelect("{$targetTable}.*", DB::raw("(CASE WHEN {$tablePrefixedForeignKey} IS NOT NULL THEN 1 ELSE 0 END) as {$eachOtherKey}"))
                     ->leftJoin("{$table} as pivot_followables", function ($join) use ($table, $class, $foreignKey) {
                         $join->on('pivot_followables.followable_type', '=', DB::raw(\addcslashes("'{$class}'", '\\')))
                             ->on('pivot_followables.followable_id', '=', "{$table}.{$foreignKey}")
