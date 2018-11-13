@@ -40,7 +40,7 @@ trait CanBeFollowed
     {
         $table = config('follow.followable_table');
         $class = \get_class($this);
-        $userTable = config('follow.user_table', 'users');
+        $userTable = config('follow.users_table_name', 'users');
         $foreignKey = config('follow.users_table_foreign_key', 'user_id');
         $tablePrefixedForeignKey = app('db.connection')->getQueryGrammar()->wrap(\sprintf('pivot_followables.%s', $foreignKey));
         $eachOtherKey = app('db.connection')->getQueryGrammar()->wrap('pivot_each_other');
