@@ -102,4 +102,20 @@ class CanFollowTest extends TestCase
         $user2->follow($user1);
         $this->assertTrue($user1->areFollowingEachOther($user2));
     }
+
+    public function test_eager_loading()
+    {
+        $user1 = User::find(1);
+        $user2 = User::find(2);
+
+        $user1->follow($user2);
+        $user2->follow($user1);
+
+        // eager loading
+        $user2 = User::find(2)->load(['followings', 'followers']);
+        $this->assertTrue($user2->isFollowedBy($user1));
+
+        // without eager loading
+        $this->assertTrue($user1->isFollowedBy($user2));
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -74,15 +74,11 @@ class Follow
     {
         $target = self::formatTargets($target, $class ?: config('follow.user_model'));
 
-        $relationKey = $class ? 'followable_id' : config('follow.users_table_foreign_key', 'user_id');
-
-        $relationKey = self::tablePrefixedField($relationKey);
-
         if ($model->relationLoaded($relation)) {
-            return $model->{$relation}->where($relationKey, head($target->ids))->isNotEmpty();
+            return $model->{$relation}->where('id', head($target->ids))->isNotEmpty();
         }
 
-        return $model->{$relation}($target->classname)->where($relationKey, head($target->ids))->exists();
+        return $model->{$relation}($target->classname)->where('id', head($target->ids))->exists();
     }
 
     /**
