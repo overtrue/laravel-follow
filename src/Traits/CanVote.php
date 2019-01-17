@@ -76,8 +76,8 @@ trait CanVote
      */
     public function cancelVote($targets, $class = __CLASS__)
     {
-        Follow::detachRelations($this, 'upvotes', $targets, $class);
-        Follow::detachRelations($this, 'downvotes', $targets, $class);
+        $this->hasUpvoted($targets) && Follow::detachRelations($this, 'upvotes', $targets, $class);
+        $this->hasDownvoted($targets) && Follow::detachRelations($this, 'downvotes', $targets, $class);
 
         return $this;
     }
