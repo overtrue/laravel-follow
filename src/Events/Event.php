@@ -57,6 +57,6 @@ class Event
 
     public function getTargetsCollection()
     {
-        return \forward_static_call([$this->class, 'find'], (array) $this->targets);
+        return \forward_static_call([$this->targets->classname, 'find'], (array) $this->targets);
     }
 }
