@@ -6,7 +6,7 @@
     },
     "require-dev": {
         "laravel/laravel": "~5.5",
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "~8.0",
         "mockery/mockery": "1.2.2"
     },
     "license": "MIT",
