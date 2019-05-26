@@ -38,7 +38,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     /**
      * Setup DB before each test.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -74,7 +74,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         (new \CreateOthersTable())->up();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 
