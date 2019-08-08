@@ -24,7 +24,9 @@ use Overtrue\LaravelFollow\Follow;
  */
 class Event
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public $causer;
 

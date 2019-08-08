@@ -17,7 +17,8 @@ use Overtrue\LaravelFollow\Traits\CanBeFollowed;
 
 class User extends Model
 {
-    use CanFollow, CanBeFollowed;
+    use CanFollow;
+    use CanBeFollowed;
 
     protected $table = 'users';
 
