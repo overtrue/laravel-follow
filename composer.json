@@ -5,7 +5,7 @@
         "php": ">=7.0"
     },
     "require-dev": {
-        "laravel/laravel": "~5.5",
+        "laravel/laravel": "~5.5||~6.0",
         "phpunit/phpunit": "~7.5",
         "mockery/mockery": "1.2.3"
     },
