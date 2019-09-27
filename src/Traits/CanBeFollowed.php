@@ -52,7 +52,8 @@ trait CanBeFollowed
             ->leftJoin("{$table} as pivot_followables", function ($join) use ($table, $class, $foreignKey) {
                 $join->on('pivot_followables.followable_type', '=', DB::raw(\addcslashes("'{$class}'", '\\')))
                     ->on('pivot_followables.followable_id', '=', "{$table}.{$foreignKey}")
-                    ->on("pivot_followables.{$foreignKey}", '=', "{$table}.followable_id");
+                    ->on("pivot_followables.{$foreignKey}", '=', "{$table}.followable_id")
+                    ->where('pivot_followables.relation', '=', Follow::RELATION_FOLLOW);
             });
     }
 }
