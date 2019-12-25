@@ -296,16 +296,16 @@ $relations = FollowRelation::popular(App\Post::class)->paginate(15);
 
 ### Events
 
- - `Overtrue\LaravelFollow\RelationAttaching`
- - `Overtrue\LaravelFollow\RelationAttached`
- - `Overtrue\LaravelFollow\RelationDetaching`
- - `Overtrue\LaravelFollow\RelationDetached`
- - `Overtrue\LaravelFollow\RelationToggling`
- - `Overtrue\LaravelFollow\RelationToggled`
+ - `Overtrue\LaravelFollow\Events\RelationAttaching`
+ - `Overtrue\LaravelFollow\Events\RelationAttached`
+ - `Overtrue\LaravelFollow\Events\RelationDetaching`
+ - `Overtrue\LaravelFollow\Events\RelationDetached`
+ - `Overtrue\LaravelFollow\Events\RelationToggling`
+ - `Overtrue\LaravelFollow\Events\RelationToggled`
 
 
 ```php
-Event::listen(\Overtrue\LaravelFollow\RelationAttached::class, function($event) {
+Event::listen(\Overtrue\LaravelFollow\Events\RelationAttached::class, function($event) {
     // $event->causer; 
     // $event->getTargetsCollection(); 
     // $event->getRelationType();
@@ -314,7 +314,7 @@ Event::listen(\Overtrue\LaravelFollow\RelationAttached::class, function($event) 
 
 # About toggled event.
 
-There has a extra properties for `Overtrue\LaravelFollow\RelationToggled` event.
+There has a extra properties for `Overtrue\LaravelFollow\Events\RelationToggled` event.
 
 ```php
 $event->results; // ['attached' => [1, 2, 3], 'detached' => [5, 6]]
