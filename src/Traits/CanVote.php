@@ -12,6 +12,7 @@
 namespace Overtrue\LaravelFollow\Traits;
 
 use Overtrue\LaravelFollow\Follow;
+use Illuminate\Support\Str;
 
 /**
  * Trait CanVote.
@@ -33,7 +34,7 @@ trait CanVote
     {
         $this->cancelVote($targets);
 
-        return Follow::attachRelations($this, str_plural($type), $targets, $class);
+        return Follow::attachRelations($this, Str::plural($type), $targets, $class);
     }
 
     /**
