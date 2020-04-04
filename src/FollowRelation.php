@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -101,7 +101,7 @@ class FollowRelation extends Model
 
         $namespace = config('follow.model_namespace', 'App');
 
-        $modelName = $namespace.'\\'.studly_case($type);
+        $modelName = $namespace . '\\' . studly_case($type);
 
         if (!class_exists($modelName)) {
             throw new InvalidArgumentException("Model {$modelName} not exists. Please check your config 'follow.model_namespace'.");

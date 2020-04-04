@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -21,11 +21,11 @@ class FollowServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            realpath(__DIR__.'/../config/follow.php') => config_path('follow.php'),
+            realpath(__DIR__ . '/../config/follow.php') => config_path('follow.php'),
         ], 'config');
 
         $this->publishes([
-            realpath(__DIR__.'/../database/migrations') => database_path('migrations'),
+            realpath(__DIR__ . '/../database/migrations') => database_path('migrations'),
         ], 'migrations');
     }
 
@@ -34,6 +34,6 @@ class FollowServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(realpath(__DIR__.'/../config/follow.php'), 'follow');
+        $this->mergeConfigFrom(realpath(__DIR__ . '/../config/follow.php'), 'follow');
     }
 }

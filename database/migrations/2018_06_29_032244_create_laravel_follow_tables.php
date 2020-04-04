@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -50,7 +50,7 @@ class CreateLaravelFollowTables extends Migration
     public function down()
     {
         Schema::table(config('follow.followable_table', 'followables'), function ($table) {
-            $table->dropForeign(config('follow.followable_table', 'followables').'_user_id_foreign');
+            $table->dropForeign(config('follow.followable_table', 'followables') . '_user_id_foreign');
         });
 
         Schema::drop(config('follow.followable_table', 'followables'));
