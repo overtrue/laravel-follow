@@ -1,97 +1,51 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-followable.
  *
- * (c) overtrue <i@overtrue.me>
+ * (c) overtrue <anzhengchao@gmail.com>
  *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
+ * This source file is subject to the MIT license that is bundled.
  */
 
-namespace Overtrue\LaravelFollow\Test;
+namespace Tests;
 
-use Illuminate\Filesystem\Filesystem;
+use Overtrue\LaravelFollow\FollowServiceProvider;
 
-class TestCase extends \Illuminate\Foundation\Testing\TestCase
+abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
-    protected $config;
-
     /**
-     * Creates the application.
+     * Load package service provider.
      *
-     * Needs to be implemented by subclasses.
+     * @param \Illuminate\Foundation\Application $app
      *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+     * @return array
      */
-    public function createApplication()
+    protected function getPackageProviders($app)
     {
-        $app = require __DIR__.'/../vendor/laravel/laravel/bootstrap/app.php';
-        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
-
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite.database', ':memory:');
-
-        return $app;
+        return [FollowServiceProvider::class];
     }
 
     /**
-     * Setup DB before each test.
+     * Define environment setup.
+     *
+     * @param \Illuminate\Foundation\Application $app
      */
+    protected function getEnvironmentSetUp($app)
+    {
+        // Setup default database to use sqlite :memory:
+        $app['config']->set('database.default', 'testing');
+        $app['config']->set('database.connections.testing', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
-
-        if (empty($this->config)) {
-            $this->config = require __DIR__.'/../config/follow.php';
-        }
-
-        $this->app['config']->set('follow', $this->config);
-        $this->app['config']->set('follow.user_model', User::class);
-
-        $this->migrate();
-        $this->seed();
-    }
-
-    /**
-     * run package database migrations.
-     */
-    public function migrate()
-    {
-        $fileSystem = new Filesystem();
-
-        $fileSystem->copy(
-            __DIR__.'/../database/migrations/2018_06_29_032244_create_laravel_follow_tables.php',
-            __DIR__.'/database/migrations/create_laravel_follow_tables.php'
-        );
-
-        foreach ($fileSystem->files(__DIR__.'/database/migrations') as $file) {
-            $fileSystem->requireOnce($file);
-        }
-
-        (new \CreateLaravelFollowTables())->up();
-        (new \CreateUsersTable())->up();
-        (new \CreateOthersTable())->up();
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        unlink(__DIR__.'/database/migrations/create_laravel_follow_tables.php');
-    }
-
-    /**
-     * Seed testing database.
-     */
-    public function seed($classname = null)
-    {
-        User::create(['name' => 'John']);
-        User::create(['name' => 'Allison']);
-        User::create(['name' => 'Ron']);
-
-        Other::create(['name' => 'Laravel']);
-        Other::create(['name' => 'Vuejs']);
-        Other::create(['name' => 'Ruby']);
+        $this->loadMigrationsFrom(__DIR__.'/migrations');
+        $this->loadMigrationsFrom(dirname(__DIR__).'/migrations');
     }
 }

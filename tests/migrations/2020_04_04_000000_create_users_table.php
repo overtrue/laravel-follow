@@ -1,12 +1,11 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-followable.
  *
- * (c) overtrue <i@overtrue.me>
+ * (c) overtrue <anzhengchao@gmail.com>
  *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
+ * This source file is subject to the MIT license that is bundled.
  */
 
 use Illuminate\Database\Migrations\Migration;

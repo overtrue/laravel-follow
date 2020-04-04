@@ -1,64 +1,44 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-followable.
  *
- * (c) overtrue <i@overtrue.me>
+ * (c) overtrue <anzhengchao@gmail.com>
  *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
+ * This source file is subject to the MIT license that is bundled.
  */
 
 namespace Overtrue\LaravelFollow\Events;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
-use Overtrue\LaravelFollow\Follow;
+use Overtrue\LaravelFollow\UserFollower;
 
-/**
- * Class Event.
- *
- * @author overtrue <i@overtrue.me>
- */
 class Event
 {
-    use Dispatchable;
-    use InteractsWithSockets;
-    use SerializesModels;
+    /**
+     * @var int
+     */
+    public $followingId;
 
-    public $causer;
+    /**
+     * @var int
+     */
+    public $followerId;
 
-    public $relation;
-
-    public $targets;
-
-    public $class;
+    /**
+     * @var \Overtrue\LaravelFollow\UserFollower
+     */
+    protected $relation;
 
     /**
      * Event constructor.
      *
-     * @param \Illuminate\Database\Eloquent\Model   $causer
-     * @param \Overtrue\LaravelFollow\Events\string $relation
-     * @param int|array                             $targets
-     * @param \Overtrue\LaravelFollow\Events\string $class
+     * @param \Overtrue\LaravelFollow\UserFollower $relation
      */
-    public function __construct(Model $causer, string $relation, $targets, string $class)
+    public function __construct(UserFollower $relation)
     {
-        $this->causer = $causer;
         $this->relation = $relation;
-        $this->targets = $targets;
-        $this->class = $class;
-    }
-
-    public function getRelationType()
-    {
-        return Follow::RELATION_TYPES[$this->relation];
-    }
-
-    public function getTargetsCollection()
-    {
-        return \forward_static_call([$this->targets->classname, 'find'], (array) $this->targets->ids);
+        $this->followerId = $relation->follower_id;
+        $this->followingId = $relation->following_id;
     }
 }

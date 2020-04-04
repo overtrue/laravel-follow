@@ -1,26 +1,24 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-followable.
  *
- * (c) overtrue <i@overtrue.me>
+ * (c) overtrue <anzhengchao@gmail.com>
  *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
+ * This source file is subject to the MIT license that is bundled.
  */
 
-namespace Overtrue\LaravelFollow\Test;
+namespace Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Overtrue\LaravelFollow\Traits\CanFollow;
-use Overtrue\LaravelFollow\Traits\CanBeFollowed;
+use Overtrue\LaravelFollow\Followable;
 
+/**
+ * Class User.
+ */
 class User extends Model
 {
-    use CanFollow;
-    use CanBeFollowed;
-
-    protected $table = 'users';
+    use Followable;
 
     protected $fillable = ['name'];
 }
