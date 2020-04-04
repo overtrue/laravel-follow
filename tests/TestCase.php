@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow
+ * This file is part of the overtrue/laravel-follow.
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -26,7 +26,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     public function createApplication()
     {
-        $app = require __DIR__.'/../vendor/laravel/laravel/bootstrap/app.php';
+        $app = require __DIR__ . '/../vendor/laravel/laravel/bootstrap/app.php';
         $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
         $app['config']->set('database.default', 'sqlite');
@@ -43,7 +43,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         parent::setUp();
 
         if (empty($this->config)) {
-            $this->config = require __DIR__.'/../config/follow.php';
+            $this->config = require __DIR__ . '/../config/follow.php';
         }
 
         $this->app['config']->set('follow', $this->config);
@@ -61,11 +61,11 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $fileSystem = new Filesystem();
 
         $fileSystem->copy(
-            __DIR__.'/../database/migrations/2018_06_29_032244_create_laravel_follow_tables.php',
-            __DIR__.'/database/migrations/create_laravel_follow_tables.php'
+            __DIR__ . '/../database/migrations/2018_06_29_032244_create_laravel_follow_tables.php',
+            __DIR__ . '/database/migrations/create_laravel_follow_tables.php'
         );
 
-        foreach ($fileSystem->files(__DIR__.'/database/migrations') as $file) {
+        foreach ($fileSystem->files(__DIR__ . '/database/migrations') as $file) {
             $fileSystem->requireOnce($file);
         }
 
@@ -78,7 +78,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     {
         parent::tearDown();
 
-        unlink(__DIR__.'/database/migrations/create_laravel_follow_tables.php');
+        unlink(__DIR__ . '/database/migrations/create_laravel_follow_tables.php');
     }
 
     /**
