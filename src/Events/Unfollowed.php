@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -11,11 +11,6 @@
 
 namespace Overtrue\LaravelFollow\Events;
 
-/**
- * Class RelationToggling.
- *
- * @author overtrue <i@overtrue.me>
- */
-class RelationToggling extends Event
+class Unfollowed extends Event
 {
 }

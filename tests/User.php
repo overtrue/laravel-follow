@@ -9,18 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Overtrue\LaravelFollow\Test;
+namespace Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Overtrue\LaravelFollow\Traits\CanFollow;
-use Overtrue\LaravelFollow\Traits\CanBeFollowed;
+use Overtrue\LaravelFollow\Followable;
 
+/**
+ * Class User.
+ */
 class User extends Model
 {
-    use CanFollow;
-    use CanBeFollowed;
-
-    protected $table = 'users';
+    use Followable;
 
     protected $fillable = ['name'];
 }

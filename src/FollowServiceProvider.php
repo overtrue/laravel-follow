@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the overtrue/laravel-follow.
+ * This file is part of the overtrue/laravel-follow
  *
  * (c) overtrue <i@overtrue.me>
  *
@@ -13,27 +13,22 @@ namespace Overtrue\LaravelFollow;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class FollowServiceProvider.
+ */
 class FollowServiceProvider extends ServiceProvider
 {
     /**
-     * Application bootstrap event.
+     * Perform post-registration booting of services.
      */
     public function boot()
     {
         $this->publishes([
-            realpath(__DIR__ . '/../config/follow.php') => config_path('follow.php'),
-        ], 'config');
-
-        $this->publishes([
-            realpath(__DIR__ . '/../database/migrations') => database_path('migrations'),
+            \dirname(__DIR__) . '/migrations/' => database_path('migrations'),
         ], 'migrations');
-    }
 
-    /**
-     * Register the service provider.
-     */
-    public function register()
-    {
-        $this->mergeConfigFrom(realpath(__DIR__ . '/../config/follow.php'), 'follow');
+        if ($this->app->runningInConsole()) {
+            $this->loadMigrationsFrom(\dirname(__DIR__) . '/migrations/');
+        }
     }
 }
