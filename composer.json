@@ -32,6 +32,16 @@
     "extra": {
         "laravel": {
             "providers": ["Overtrue\\LaravelFollow\\FollowServiceProvider"]
+        },
+        "hooks": {
+            "pre-commit": [
+                "composer test",
+                "composer fix-style"
+            ],
+            "pre-push": [
+                "composer test",
+                "composer check-style"
+            ]
         }
     },
     "scripts": {
