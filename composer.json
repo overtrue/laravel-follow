@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "laravel/framework": "^5.5"
+        "laravel/framework": "^6.18"
     },
     "autoload": {
         "psr-4": {
@@ -22,7 +22,7 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "^5.5",
+        "laravel/framework": "^6.18",
         "mockery/mockery": "^1.2",
         "phpunit/phpunit": "~8.0",
         "orchestra/testbench": "^3.7",
