@@ -24,7 +24,7 @@
     "require-dev": {
         "mockery/mockery": "^1.2",
         "phpunit/phpunit": "~8.0",
-        "orchestra/testbench": "^3.7",
+        "orchestra/testbench": "^5.1",
         "brainmaestro/composer-git-hooks": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.16"
     },
