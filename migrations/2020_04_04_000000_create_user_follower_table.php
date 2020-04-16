@@ -24,6 +24,7 @@ class CreateUserFollowerTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('following_id')->index();
             $table->unsignedBigInteger('follower_id')->index();
+            $table->boolean('accepted_at')->nullable()->index();
             $table->timestamps();
         });
     }
