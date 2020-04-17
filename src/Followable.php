@@ -24,7 +24,7 @@ trait Followable
     /**
      * @return bool
      */
-    public function isPrivateUser()
+    public function needsToApproveFollowRequests()
     {
         return false;
     }
@@ -36,7 +36,7 @@ trait Followable
      */
     public function follow($user)
     {
-        $isPending = $user->isPrivateUser() ?: false;
+        $isPending = $user->needsToApproveFollowRequests() ?: false;
 
         $this->followings()->attach($user, [
             'accepted_at' => $isPending ? null : now()
@@ -67,10 +67,6 @@ trait Followable
      */
     public function rejectFollowRequestFrom($user)
     {
-        if ($user instanceof Model) {
-            $user = $user->getKey();
-        }
-
         $this->followers()->detach($user);
     }
 
@@ -79,10 +75,6 @@ trait Followable
      */
     public function acceptFollowRequestFrom($user)
     {
-        if ($user instanceof Model) {
-            $user = $user->getKey();
-        }
-
         $this->followers()->updateExistingPivot($user, ['accepted_at' => now()]);
     }
 
@@ -98,14 +90,12 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
-                ->filter(function ($following) {
-                    return $following->pivot->accepted_at === null;
-                })
+                ->whereNull('pivot.accepted_at')
                 ->contains($user);
         }
 
         return $this->followings()
-            ->whereNull('accepted_at')
+            ->wherePivot('accepted_at', null)
             ->where($this->getQualifiedKeyName(), $user)
             ->exists();
     }
@@ -124,14 +114,12 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
-                ->filter(function ($following) {
-                    return $following->pivot->accepted_at !== null;
-                })
+                ->whereNotNull('pivot.accepted_at')
                 ->contains($user);
         }
 
         return $this->followings()
-            ->whereNotNull('accepted_at')
+            ->wherePivot('accepted_at', '!=', null)
             ->where($this->getQualifiedKeyName(), $user)
             ->exists();
     }
@@ -150,14 +138,12 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followers')) {
             return $this->followers
-                ->filter(function ($following) {
-                    return $following->pivot->accepted_at !== null;
-                })
+                ->whereNotNull('pivot.accepted_at')
                 ->contains($user);
         }
 
         return $this->followers()
-            ->whereNotNull('accepted_at')
+            ->wherePivot('accepted_at', '!=', null)
             ->where($this->getQualifiedKeyName(), $user)
             ->exists();
     }

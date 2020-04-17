@@ -90,10 +90,10 @@ $user->followers;
 
 ### Follow Requests
 
-If you would like to have some follow requests to need to be accepted by the user being followed, simply override the **isPrivateUser()** method in the model that uses the **Followable** trait with your custom logic:
+If you would like to have some follow requests to need to be accepted by the user being followed, simply override the **needsToApproveFollowRequests()** method in the model that uses the **Followable** trait with your custom logic:
 
 ```php
-public function isPrivateUser()
+public function needsToApproveFollowRequests()
 {
     // Your custom logic here
     return (bool) $this->private;
