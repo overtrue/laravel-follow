@@ -14,6 +14,7 @@
 </p>
 
 > 💡 The new version has been split into several packages:
+>
 > - Follow: [overtrue/laravel-follow](https://github.com/overtrue/laravel-follow)
 > - Like: [overtrue/laravel-like](https://github.com/overtrue/laravel-like)
 > - Favorite: [overtrue/laravel-favorite](https://github.com/overtrue/laravel-favorite)
@@ -65,9 +66,12 @@ $user2 = User::find(2);
 $user1->follow($user2);
 $user1->unfollow($user2);
 $user1->toggleFollow($user2);
+$user1->acceptFollowRequestFrom($user2);
+$user1->rejectFollowRequestFrom($user2);
 
-$user1->isFollowing($user2); 
-$user2->isFollowdBy($user1); 
+$user1->isFollowing($user2);
+$user2->isFollowdBy($user1);
+$user2->hasRequestedToFollow($user1);
 
 $user1->areFollowingEachOther($user2);
 ```
@@ -75,23 +79,35 @@ $user1->areFollowingEachOther($user2);
 #### Get followings:
 
 ```php
-$user->followings; 
+$user->followings;
 ```
 
 #### Get followers:
 
 ```php
-$user->followers; 
+$user->followers;
+```
+
+### Follow Requests
+
+If you would like to have some follow requests to need to be accepted by the user being followed, simply override the **needsToApproveFollowRequests()** method in the model that uses the **Followable** trait with your custom logic:
+
+```php
+public function needsToApproveFollowRequests()
+{
+    // Your custom logic here
+    return (bool) $this->private;
+}
 ```
 
 ### Aggregations
 
 ```php
 // followings count
-$user->followings()->count(); 
+$user->followings()->count();
 
 // with query where
-$user->followings()->where('gender', 'female')->count(); 
+$user->followings()->where('gender', 'female')->count();
 
 // followers count
 $post->followers()->count();
@@ -126,13 +142,12 @@ foreach($users as $user) {
 }
 ```
 
-
 ### Events
 
-| **Event** | **Description** |
-| --- | --- |
-|  `Overtrue\LaravelFollow\Events\Followd` | Triggered when the relationship is created. |
-|  `Overtrue\LaravelFollow\Events\Unfollowd` | Triggered when the relationship is deleted. |
+| **Event**                                 | **Description**                             |
+| ----------------------------------------- | ------------------------------------------- |
+| `Overtrue\LaravelFollow\Events\Followd`   | Triggered when the relationship is created. |
+| `Overtrue\LaravelFollow\Events\Unfollowd` | Triggered when the relationship is deleted. |
 
 ## Contributing
 

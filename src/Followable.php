@@ -22,31 +22,82 @@ use Illuminate\Database\Eloquent\Model;
 trait Followable
 {
     /**
+     * @return bool
+     */
+    public function needsToApproveFollowRequests()
+    {
+        return false;
+    }
+
+    /**
      * @param \Illuminate\Database\Eloquent\Model|int $user
+     *
+     * @return array
      */
     public function follow($user)
     {
-        $this->followings()->attach($user);
+        $isPending = $user->needsToApproveFollowRequests() ?: false;
+
+        $this->followings()->attach($user, [
+            'accepted_at' => $isPending ? null : now()
+        ]);
+
+        return ['pending' => $isPending];
     }
 
     /**
      * @param \Illuminate\Database\Eloquent\Model|int $user
-     *
-     * @return int
      */
     public function unfollow($user)
     {
-        return $this->followings()->detach($user);
+        $this->followings()->detach($user);
     }
 
     /**
      * @param \Illuminate\Database\Eloquent\Model|int $user
      *
-     * @return array|array[]
      */
     public function toggleFollow($user)
     {
-        return $this->followings()->toggle($user);
+        $this->isFollowing($user) ? $this->unfollow($user) : $this->follow($user);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model|int $user
+     */
+    public function rejectFollowRequestFrom($user)
+    {
+        $this->followers()->detach($user);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model|int $user
+     */
+    public function acceptFollowRequestFrom($user)
+    {
+        $this->followers()->updateExistingPivot($user, ['accepted_at' => now()]);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model|int $user
+     */
+    public function hasRequestedToFollow(Model $user): bool
+    {
+        if ($user instanceof Model) {
+            $user = $user->getKey();
+        }
+
+        /* @var \Illuminate\Database\Eloquent\Model $this */
+        if ($this->relationLoaded('followings')) {
+            return $this->followings
+                ->whereNull('pivot.accepted_at')
+                ->contains($user);
+        }
+
+        return $this->followings()
+            ->wherePivot('accepted_at', null)
+            ->where($this->getQualifiedKeyName(), $user)
+            ->exists();
     }
 
     /**
@@ -62,10 +113,15 @@ trait Followable
 
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
-            return $this->followings->contains($user);
+            return $this->followings
+                ->whereNotNull('pivot.accepted_at')
+                ->contains($user);
         }
 
-        return $this->followings()->where($this->getQualifiedKeyName(), $user)->exists();
+        return $this->followings()
+            ->wherePivot('accepted_at', '!=', null)
+            ->where($this->getQualifiedKeyName(), $user)
+            ->exists();
     }
 
     /**
@@ -81,10 +137,15 @@ trait Followable
 
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followers')) {
-            return $this->followers->contains($user);
+            return $this->followers
+                ->whereNotNull('pivot.accepted_at')
+                ->contains($user);
         }
 
-        return $this->followers()->where($this->getQualifiedKeyName(), $user)->exists();
+        return $this->followers()
+            ->wherePivot('accepted_at', '!=', null)
+            ->where($this->getQualifiedKeyName(), $user)
+            ->exists();
     }
 
     /**
@@ -109,7 +170,7 @@ trait Followable
             \config('follow.relation_table', 'user_follower'),
             'following_id',
             'follower_id'
-        )->withTimestamps()->using(UserFollower::class);
+        )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
     }
 
     /**
@@ -123,6 +184,6 @@ trait Followable
             \config('follow.relation_table', 'user_follower'),
             'follower_id',
             'following_id'
-        )->withTimestamps()->using(UserFollower::class);
+        )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
     }
 }

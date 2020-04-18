@@ -21,5 +21,17 @@ class User extends Model
 {
     use Followable;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'private'];
+
+    protected $casts = [
+        'private' => 'boolean',
+    ];
+
+    /**
+     * @return bool
+     */
+    public function needsToApproveFollowRequests()
+    {
+        return $this->private ?? false;
+    }
 }
