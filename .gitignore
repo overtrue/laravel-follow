@@ -4,3 +4,5 @@ composer.lock
 .php_cs.cache
 /coverage/
 .phpunit.result.cache
+cghooks.lock
+

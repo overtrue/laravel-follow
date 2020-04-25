@@ -90,7 +90,7 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
-                ->whereNull('pivot.accepted_at')
+                ->whereStrict('pivot.accepted_at', null)
                 ->contains($user);
         }
 
@@ -114,7 +114,7 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
-                ->whereNotNull('pivot.accepted_at')
+                ->where('pivot.accepted_at', '!==', null)
                 ->contains($user);
         }
 
@@ -138,7 +138,7 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followers')) {
             return $this->followers
-                ->whereNotNull('pivot.accepted_at')
+                ->where('pivot.accepted_at', '!==', null)
                 ->contains($user);
         }
 
