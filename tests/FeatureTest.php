@@ -11,9 +11,11 @@
 
 namespace Tests;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
+use Overtrue\LaravelFollow\UserFollower;
 
 /**
  * Class FeatureTest.
@@ -36,18 +38,24 @@ class FeatureTest extends TestCase
 
         $user1->follow($user2);
 
-        Event::assertDispatched(Followed::class, function ($event) use ($user1, $user2) {
-            return $event->followingId === $user2->id && $event->followerId === $user1->id;
-        });
+        Event::assertDispatched(
+            Followed::class,
+            function ($event) use ($user1, $user2) {
+                return $event->followingId === $user2->id && $event->followerId === $user1->id;
+            }
+        );
 
         $this->assertTrue($user1->isFollowing($user2));
         $this->assertTrue($user2->isFollowedBy($user1));
 
         $user1->unfollow($user2);
 
-        Event::assertDispatched(Unfollowed::class, function ($event) use ($user1, $user2) {
-            return $event->followingId === $user2->id && $event->followerId === $user1->id;
-        });
+        Event::assertDispatched(
+            Unfollowed::class,
+            function ($event) use ($user1, $user2) {
+                return $event->followingId === $user2->id && $event->followerId === $user1->id;
+            }
+        );
     }
 
     public function test_unfollow_features()
@@ -71,6 +79,23 @@ class FeatureTest extends TestCase
         $this->assertTrue($user3->isFollowing($user4));
     }
 
+    public function test_user_can_get_unfollowed_users()
+    {
+        $user1 = User::create(['name' => 'user1']);
+        $user2 = User::create(['name' => 'user2']);
+        $user3 = User::create(['name' => 'user3']);
+        $user4 = User::create(['name' => 'user4']);
+
+        $user1->follow($user4);
+        $user1UnfollowedUsers = User::whereNotIn(
+            'id',
+            function ($q) use ($user1) {
+                $q->select('following_id')->from('user_follower')->where('follower_id', $user1->id);
+            }
+        )->where('id', '<>', $user1->id)->get()->toArray();
+        $this->assertCount(2, $user1UnfollowedUsers);
+    }
+
     public function test_eager_loading()
     {
         $user1 = User::create(['name' => 'user1']);
@@ -85,56 +110,68 @@ class FeatureTest extends TestCase
         $user3->follow($user4);
 
         // without eager loading
-        $sqls = $this->getQueryLog(function () use ($user1, $user2, $user3, $user4) {
-            $user1->isFollowing($user2);
-            $user1->isFollowing($user3);
-            $user1->isFollowing($user4);
-        });
+        $sqls = $this->getQueryLog(
+            function () use ($user1, $user2, $user3, $user4) {
+                $user1->isFollowing($user2);
+                $user1->isFollowing($user3);
+                $user1->isFollowing($user4);
+            }
+        );
 
         $this->assertSame(3, $sqls->count());
 
         // -- following
         // with eager loading
         $user1->load('followings');
-        $sqls = $this->getQueryLog(function () use ($user1, $user2, $user3, $user4) {
-            $user1->isFollowing($user2);
-            $user1->isFollowing($user3);
-            $user1->isFollowing($user4);
-        });
+        $sqls = $this->getQueryLog(
+            function () use ($user1, $user2, $user3, $user4) {
+                $user1->isFollowing($user2);
+                $user1->isFollowing($user3);
+                $user1->isFollowing($user4);
+            }
+        );
         $this->assertSame(0, $sqls->count());
 
         // -- followers
         // without eager loading
-        $sqls = $this->getQueryLog(function () use ($user1, $user2, $user3, $user4) {
-            $user4->isFollowedBy($user1);
-            $user4->isFollowedBy($user2);
-            $user4->isFollowedBy($user3);
-        });
+        $sqls = $this->getQueryLog(
+            function () use ($user1, $user2, $user3, $user4) {
+                $user4->isFollowedBy($user1);
+                $user4->isFollowedBy($user2);
+                $user4->isFollowedBy($user3);
+            }
+        );
 
         $this->assertSame(3, $sqls->count());
 
         // with eager loading
         $user4->load('followers');
-        $sqls = $this->getQueryLog(function () use ($user1, $user2, $user3, $user4) {
-            $user4->isFollowedBy($user1);
-            $user4->isFollowedBy($user2);
-            $user4->isFollowedBy($user3);
-        });
+        $sqls = $this->getQueryLog(
+            function () use ($user1, $user2, $user3, $user4) {
+                $user4->isFollowedBy($user1);
+                $user4->isFollowedBy($user2);
+                $user4->isFollowedBy($user3);
+            }
+        );
         $this->assertSame(0, $sqls->count());
 
         // -- follow each other
         $user4->follow($user1);
         // without loading
-        $sqls = $this->getQueryLog(function () use ($user1, $user2, $user3, $user4) {
-            $user1->areFollowingEachOther($user4);
-        });
+        $sqls = $this->getQueryLog(
+            function () use ($user1, $user2, $user3, $user4) {
+                $user1->areFollowingEachOther($user4);
+            }
+        );
         $this->assertSame(1, $sqls->count());
 
         // with eager loading
         $user1->load('followings', 'followers');
-        $sqls = $this->getQueryLog(function () use ($user1, $user2, $user3, $user4) {
-            $user1->areFollowingEachOther($user4);
-        });
+        $sqls = $this->getQueryLog(
+            function () use ($user1, $user2, $user3, $user4) {
+                $user1->areFollowingEachOther($user4);
+            }
+        );
         $this->assertSame(0, $sqls->count());
     }
 
@@ -146,9 +183,11 @@ class FeatureTest extends TestCase
     protected function getQueryLog(\Closure $callback): \Illuminate\Support\Collection
     {
         $sqls = \collect([]);
-        \DB::listen(function ($query) use ($sqls) {
-            $sqls->push(['sql' => $query->sql, 'bindings' => $query->bindings]);
-        });
+        \DB::listen(
+            function ($query) use ($sqls) {
+                $sqls->push(['sql' => $query->sql, 'bindings' => $query->bindings]);
+            }
+        );
 
         $callback();
 
