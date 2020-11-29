@@ -81,7 +81,7 @@ trait Followable
     /**
      * @param \Illuminate\Database\Eloquent\Model|int $user
      */
-    public function hasRequestedToFollow(Model $user): bool
+    public function hasRequestedToFollow($user): bool
     {
         if ($user instanceof Model) {
             $user = $user->getKey();
