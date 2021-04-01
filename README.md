@@ -146,8 +146,8 @@ foreach($users as $user) {
 
 | **Event**                                 | **Description**                             |
 | ----------------------------------------- | ------------------------------------------- |
-| `Overtrue\LaravelFollow\Events\Followd`   | Triggered when the relationship is created. |
-| `Overtrue\LaravelFollow\Events\Unfollowd` | Triggered when the relationship is deleted. |
+| `Overtrue\LaravelFollow\Events\Followed`   | Triggered when the relationship is created. |
+| `Overtrue\LaravelFollow\Events\Unfollowed` | Triggered when the relationship is deleted. |
 
 ## Contributing
 
