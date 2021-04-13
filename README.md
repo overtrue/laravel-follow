@@ -28,6 +28,14 @@
 $ composer require overtrue/laravel-follow -vvv
 ```
 
+### Configuration
+
+This step is optional
+
+```php
+$ php artisan vendor:publish --provider="Overtrue\\LaravelFollow\\FollowServiceProvider" --tag=config
+```
+
 ### Migrations
 
 This step is also optional, if you want to custom the pivot table, you can publish the migration files:
