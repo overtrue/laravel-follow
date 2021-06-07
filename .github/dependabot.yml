@@ -6,13 +6,3 @@ updates:
     interval: daily
     time: "21:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: laravel/framework
-    versions:
-    - ">= 6.a, < 7"
-  - dependency-name: phpunit/phpunit
-    versions:
-    - ">= 8.a, < 9"
-  - dependency-name: phpunit/phpunit
-    versions:
-    - ">= 9.a, < 10"

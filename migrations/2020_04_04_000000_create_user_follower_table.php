@@ -1,23 +1,11 @@
 <?php
 
-/*
- * This file is part of the overtrue/laravel-follow.
- *
- * (c) overtrue <i@overtrue.me>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateUserFollowerTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create(config('follow.relation_table', 'user_follower'), function (Blueprint $table) {
@@ -29,9 +17,6 @@ class CreateUserFollowerTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::dropIfExists(config('follow.relation_table', 'user_follower'));
