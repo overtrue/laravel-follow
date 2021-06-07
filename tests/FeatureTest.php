@@ -212,6 +212,6 @@ class FeatureTest extends TestCase
 
         // with custom resolver
         $posts = \collect(['author' => $user2], ['author' => $user3], ['author' => $user4]);
-        $user1->attachFollowStatus($posts, fn($post) => $post['author']);
+        $user1->attachFollowStatus($posts, fn ($post) => $post['author']);
     }
 }

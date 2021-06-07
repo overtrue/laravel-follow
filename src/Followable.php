@@ -193,7 +193,7 @@ trait Followable
         $followed = $this->followings()->wherePivot('accepted_at', '!=', null)->pluck('following_id');
 
         $followables->map(function (Model $followable) use ($followed) {
-            $resolver = $resolver ?? fn($m) => $m;
+            $resolver = $resolver ?? fn ($m) => $m;
             $followable = $resolver($followable);
 
             if (\in_array(Followable::class, \class_uses($followable))) {
