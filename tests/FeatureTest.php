@@ -209,5 +209,9 @@ class FeatureTest extends TestCase
         $this->assertTrue($users[1]->has_followed);
         $this->assertFalse($users[2]->has_followed);
         $this->assertFalse($users[3]->has_followed);
+
+        // with custom resolver
+        $posts = \collect(['author' => $user2], ['author' => $user3], ['author' => $user4]);
+        $user1->attachFollowStatus($posts, fn($post) => $post['author']);
     }
 }
