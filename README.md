@@ -118,7 +118,7 @@ $user->followings()->count();
 $user->followings()->where('gender', 'female')->count();
 
 // followers count
-$post->followers()->count();
+$user->followers()->count();
 ```
 
 List with `*_count` attribute:
@@ -131,6 +131,86 @@ foreach($users as $user) {
     // $user->followers_count;
 }
 ```
+
+### Attach user follow status to followable collection
+
+You can use `Followable::attachFollowStatus(Collection $followables)` to attach the user favorite status, it will set `has_followed` attribute to each model of `$followables`:
+
+#### For model
+
+```php
+$user1 = User::find(1);
+
+$user->attachFollowStatus($user1);
+
+// result
+[
+    "id" => 1
+    "name" => "user1"
+    "private" => false
+    "created_at" => "2021-06-07T15:06:47.000000Z"
+    "updated_at" => "2021-06-07T15:06:47.000000Z"
+    "has_followed" => true  
+  ]
+```
+
+#### For `Collection | Paginator | LengthAwarePaginator | array`:
+
+```php
+$user = auth()->user();
+
+$users = User::oldest('id')->get();
+
+$users = $user->attachFollowStatus($users);
+
+$users = $users->toArray();
+
+// result
+[
+  [
+    "id" => 1
+    "name" => "user1"
+    "private" => false
+    "created_at" => "2021-06-07T15:06:47.000000Z"
+    "updated_at" => "2021-06-07T15:06:47.000000Z"
+    "has_followed" => true  
+  ],
+  [
+    "id" => 2
+    "name" => "user2"
+    "private" => false
+    "created_at" => "2021-06-07T15:06:47.000000Z"
+    "updated_at" => "2021-06-07T15:06:47.000000Z"
+    "has_followed" => true
+  ],
+  [
+    "id" => 3
+    "name" => "user3"
+    "private" => false
+    "created_at" => "2021-06-07T15:06:47.000000Z"
+    "updated_at" => "2021-06-07T15:06:47.000000Z"
+    "has_followed" => false
+  ],
+  [
+    "id" => 4
+    "name" => "user4"
+    "private" => false
+    "created_at" => "2021-06-07T15:06:47.000000Z"
+    "updated_at" => "2021-06-07T15:06:47.000000Z"
+    "has_followed" => false
+  ],
+]
+```
+
+#### For pagination
+
+```php
+$users = User::paginate(20);
+
+$user->attachFollowStatus($users);
+```
+
+
 
 ### N+1 issue
 

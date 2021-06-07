@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the overtrue/laravel-follow.
- *
- * (c) overtrue <i@overtrue.me>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -17,9 +8,6 @@ use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
 use Overtrue\LaravelFollow\UserFollower;
 
-/**
- * Class FeatureTest.
- */
 class FeatureTest extends TestCase
 {
     public function setUp(): void
@@ -31,7 +19,7 @@ class FeatureTest extends TestCase
         config(['auth.providers.users.model' => User::class]);
     }
 
-    public function testBasicFeatures()
+    public function test_basic_features()
     {
         $user1 = User::create(['name' => 'user1']);
         $user2 = User::create(['name' => 'user2']);
@@ -192,5 +180,38 @@ class FeatureTest extends TestCase
         $callback();
 
         return $sqls;
+    }
+
+    public function test_attach_follow_status()
+    {
+        $user1 = User::create(['name' => 'user1']);
+        $user2 = User::create(['name' => 'user2']);
+        $user3 = User::create(['name' => 'user3']);
+        $user4 = User::create(['name' => 'user4']);
+
+        $user1->follow($user2);
+        $user1->follow($user3);
+        $user1->follow($user4);
+        $user2->follow($user4);
+        $user3->follow($user4);
+
+        $users = User::all();
+
+        $sqls = $this->getQueryLog(
+            function () use ($user1, $users) {
+                $user1->attachFollowStatus($users);
+            }
+        );
+
+        $this->assertSame(1, $sqls->count());
+
+        $this->assertTrue($users[0]->has_followed);
+        $this->assertTrue($users[1]->has_followed);
+        $this->assertFalse($users[2]->has_followed);
+        $this->assertFalse($users[3]->has_followed);
+
+        // with custom resolver
+        $posts = \collect(['author' => $user2], ['author' => $user3], ['author' => $user4]);
+        $user1->attachFollowStatus($posts, fn($post) => $post['author']);
     }
 }

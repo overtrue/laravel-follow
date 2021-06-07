@@ -12,6 +12,9 @@
 namespace Overtrue\LaravelFollow;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 /**
  * Trait Followable.
@@ -185,5 +188,38 @@ trait Followable
             'follower_id',
             'following_id'
         )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
+    }
+
+    public function attachFollowStatus($followables)
+    {
+        $returnFirst = false;
+
+        switch (true) {
+            case $followables instanceof Model:
+                $returnFirst = true;
+                $followables = \collect([$followables]);
+                break;
+            case $followables instanceof LengthAwarePaginator:
+                $followables = $followables->getCollection();
+                break;
+            case $followables instanceof Paginator:
+                $followables = \collect($followables->items());
+                break;
+            case \is_array($followables):
+                $followables = \collect($followables);
+                break;
+        }
+
+        \abort_if(!($followables instanceof Collection), 422, 'Invalid $followables type.');
+
+        $followed = $this->followings()->wherePivot('accepted_at', '!=', null)->pluck('following_id');
+
+        $followables->map(function (Model $followable) use ($followed) {
+            if (\in_array(Followable::class, \class_uses($followable))) {
+                $followable->setAttribute('has_followed', $followed->has($followable->getKey()));
+            }
+        });
+
+        return $returnFirst ? $followables->first() : $followables;
     }
 }
