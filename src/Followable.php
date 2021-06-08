@@ -192,7 +192,7 @@ trait Followable
 
         $followed = $this->followings()->wherePivot('accepted_at', '!=', null)->pluck('following_id');
 
-        $followables->map(function (Model $followable) use ($followed) {
+        $followables->map(function (Model $followable) use ($followed, $resolver) {
             $resolver = $resolver ?? fn ($m) => $m;
             $followable = $resolver($followable);
 
