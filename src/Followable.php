@@ -197,7 +197,7 @@ trait Followable
             $followable = $resolver($followable);
 
             if (\in_array(Followable::class, \class_uses($followable))) {
-                $followable->setAttribute('has_followed', $followed->has($followable->getKey()));
+                $followable->setAttribute('has_followed', $followed->contains($followable->getKey()));
             }
         });
 
