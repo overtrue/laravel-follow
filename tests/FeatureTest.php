@@ -205,10 +205,10 @@ class FeatureTest extends TestCase
 
         $this->assertSame(1, $sqls->count());
 
-        $this->assertTrue($users[0]->has_followed);
+        $this->assertFalse($users[0]->has_followed);
         $this->assertTrue($users[1]->has_followed);
-        $this->assertFalse($users[2]->has_followed);
-        $this->assertFalse($users[3]->has_followed);
+        $this->assertTrue($users[2]->has_followed);
+        $this->assertTrue($users[3]->has_followed);
 
         // with custom resolver
         $posts = \collect(['author' => $user2], ['author' => $user3], ['author' => $user4]);
