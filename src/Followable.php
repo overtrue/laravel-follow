@@ -192,11 +192,11 @@ trait Followable
 
         $followed = $this->followings()->wherePivot('accepted_at', '!=', null)->pluck('following_id');
 
-        $followables->map(function (Model $followable) use ($followed, $resolver) {
+        $followables->map(function ($followable) use ($followed, $resolver) {
             $resolver = $resolver ?? fn ($m) => $m;
             $followable = $resolver($followable);
 
-            if (\in_array(Followable::class, \class_uses($followable))) {
+            if ($followable && \in_array(Followable::class, \class_uses($followable))) {
                 $followable->setAttribute('has_followed', $followed->contains($followable->getKey()));
             }
         });
