@@ -7,8 +7,8 @@ use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
 
 /**
- * @property int $following_id;
- * @property int $follower_id;
+ * @property int|string $following_id;
+ * @property int|string $follower_id;
  */
 class UserFollower extends Pivot
 {

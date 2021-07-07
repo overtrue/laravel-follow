@@ -6,9 +6,15 @@ use Overtrue\LaravelFollow\UserFollower;
 
 class Event
 {
-    public int $followingId;
+    /**
+     * @var int|string
+     */
+    public $followingId;
 
-    public int $followerId;
+    /**
+     * @var int|string
+     */
+    public $followerId;
 
     protected UserFollower $relation;
 
