@@ -190,14 +190,17 @@ trait Followable
 
         \abort_if(!($followables instanceof Collection), 422, 'Invalid $followables type.');
 
-        $followed = $this->followings()->wherePivot('accepted_at', '!=', null)->pluck('following_id');
+        $followed = UserFollower::where('follower_id', $this->getKey())->get();
 
         $followables->map(function ($followable) use ($followed, $resolver) {
             $resolver = $resolver ?? fn ($m) => $m;
             $followable = $resolver($followable);
 
             if ($followable && \in_array(Followable::class, \class_uses($followable))) {
-                $followable->setAttribute('has_followed', $followed->contains($followable->getKey()));
+                $item = $followed->where('following_id', $followable->getKey())->first();
+                $followable->setAttribute('has_followed', !!$item);
+                $followable->setAttribute('followed_at', $item ? $item->created_at : null);
+                $followable->setAttribute('follow_accepted_at', $item ? $item->accepted_at : null);
             }
         });
 
