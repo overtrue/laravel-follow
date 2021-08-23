@@ -76,7 +76,7 @@ $user1->acceptFollowRequestFrom($user2);
 $user1->rejectFollowRequestFrom($user2);
 
 $user1->isFollowing($user2);
-$user2->isFollowdBy($user1);
+$user2->isFollowedBy($user1);
 $user2->hasRequestedToFollow($user1);
 
 $user1->areFollowingEachOther($user2);
