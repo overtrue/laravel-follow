@@ -11,13 +11,12 @@
 <a href="https://packagist.org/packages/overtrue/laravel-follow"><img src="https://poser.pugx.org/overtrue/laravel-follow/license" alt="License"></a>
 </p>
 
-> 💡 The new version has been split into several packages:
->
-> - Follow: [overtrue/laravel-follow](https://github.com/overtrue/laravel-follow)
-> - Like: [overtrue/laravel-like](https://github.com/overtrue/laravel-like)
-> - Favorite: [overtrue/laravel-favorite](https://github.com/overtrue/laravel-favorite)
-> - Subscribe: [overtrue/laravel-subscribe](https://github.com/overtrue/laravel-subscribe)
-> - Vote: [overtrue/laravel-vote](https://github.com/overtrue/laravel-vote)
+Related projects:
+
+- Like: [overtrue/laravel-like](https://github.com/overtrue/laravel-like)
+- Favorite: [overtrue/laravel-favorite](https://github.com/overtrue/laravel-favorite)
+- Subscribe: [overtrue/laravel-subscribe](https://github.com/overtrue/laravel-subscribe)
+- Vote: [overtrue/laravel-vote](https://github.com/overtrue/laravel-vote)
 
 ## Installing
 
