@@ -18,7 +18,6 @@
 > - Favorite: [overtrue/laravel-favorite](https://github.com/overtrue/laravel-favorite)
 > - Subscribe: [overtrue/laravel-subscribe](https://github.com/overtrue/laravel-subscribe)
 > - Vote: [overtrue/laravel-vote](https://github.com/overtrue/laravel-vote)
-> - Bookmark: overtrue/laravel-bookmark (working in progress)
 
 ## Installing
 
