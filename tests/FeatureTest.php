@@ -208,6 +208,7 @@ class FeatureTest extends TestCase
 
         $this->assertFalse($users[0]->has_followed);
         $this->assertTrue($users[1]->has_followed);
+
         $this->assertInstanceOf(Carbon::class, $users[1]->followed_at);
 
         $this->assertTrue($users[2]->has_followed);
