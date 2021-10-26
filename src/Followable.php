@@ -1,24 +1,14 @@
 <?php
 
-/*
- * This file is part of the overtrue/laravel-follow
- *
- * (c) overtrue <i@overtrue.me>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 namespace Overtrue\LaravelFollow;
 
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Overtrue\LaravelFavorite\Traits\Favoriteable;
 
 /**
- * Trait Followable.
- *
  * @property \Illuminate\Database\Eloquent\Collection $followings
  * @property \Illuminate\Database\Eloquent\Collection $followers
  */
@@ -27,7 +17,7 @@ trait Followable
     /**
      * @return bool
      */
-    public function needsToApproveFollowRequests()
+    public function needsToApproveFollowRequests(): bool
     {
         return false;
     }
@@ -37,7 +27,7 @@ trait Followable
      *
      * @return array
      */
-    public function follow($user)
+    public function follow($user): array
     {
         $isPending = $user->needsToApproveFollowRequests() ?: false;
 
@@ -105,10 +95,8 @@ trait Followable
 
     /**
      * @param \Illuminate\Database\Eloquent\Model|int $user
-     *
-     * @return bool
      */
-    public function isFollowing($user)
+    public function isFollowing($user): bool
     {
         if ($user instanceof Model) {
             $user = $user->getKey();
@@ -129,10 +117,8 @@ trait Followable
 
     /**
      * @param \Illuminate\Database\Eloquent\Model|int $user
-     *
-     * @return bool
      */
-    public function isFollowedBy($user)
+    public function isFollowedBy($user): bool
     {
         if ($user instanceof Model) {
             $user = $user->getKey();
@@ -153,19 +139,14 @@ trait Followable
 
     /**
      * @param \Illuminate\Database\Eloquent\Model|int $user
-     *
-     * @return bool
      */
-    public function areFollowingEachOther($user)
+    public function areFollowingEachOther($user): bool
     {
         /* @var \Illuminate\Database\Eloquent\Model $user*/
         return $this->isFollowing($user) && $this->isFollowedBy($user);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function followers()
+    public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         /* @var \Illuminate\Database\Eloquent\Model $this */
         return $this->belongsToMany(
@@ -176,10 +157,7 @@ trait Followable
         )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function followings()
+    public function followings(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         /* @var \Illuminate\Database\Eloquent\Model $this */
         return $this->belongsToMany(
@@ -215,11 +193,14 @@ trait Followable
         $followed = $this->followings()->wherePivot('accepted_at', '!=', null)->pluck('following_id');
 
         $followables->map(function ($followable) use ($followed, $resolver) {
-            $resolver = $resolver ?? function ($m) { return $m; };
+            $resolver = $resolver ?? fn ($m) => $m;
             $followable = $resolver($followable);
 
             if ($followable && \in_array(Followable::class, \class_uses($followable))) {
-                $followable->setAttribute('has_followed', $followed->contains($followable->getKey()));
+                $item = $followed->where('following_id', $followable->getKey())->first();
+                $followable->setAttribute('has_followed', !!$item);
+                $followable->setAttribute('followed_at', $item ? $item->created_at : null);
+                $followable->setAttribute('follow_accepted_at', $item ? $item->accepted_at : null);
             }
         });
 

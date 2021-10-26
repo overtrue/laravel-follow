@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Overtrue\LaravelFollow\Events\Followed;
@@ -207,11 +208,15 @@ class FeatureTest extends TestCase
 
         $this->assertFalse($users[0]->has_followed);
         $this->assertTrue($users[1]->has_followed);
+
+        $this->assertInstanceOf(Carbon::class, $users[1]->followed_at);
+
         $this->assertTrue($users[2]->has_followed);
         $this->assertTrue($users[3]->has_followed);
 
+
         // with custom resolver
         $posts = \collect(['author' => $user2], ['author' => $user3], ['author' => $user4]);
-        $user1->attachFollowStatus($posts, fn($post) => $post['author']);
+        $user1->attachFollowStatus($posts, fn ($post) => $post['author']);
     }
 }

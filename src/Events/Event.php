@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the overtrue/laravel-follow
- *
- * (c) overtrue <i@overtrue.me>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 namespace Overtrue\LaravelFollow\Events;
 
 use Overtrue\LaravelFollow\UserFollower;
@@ -16,25 +7,17 @@ use Overtrue\LaravelFollow\UserFollower;
 class Event
 {
     /**
-     * @var int
+     * @var int|string
      */
     public $followingId;
 
     /**
-     * @var int
+     * @var int|string
      */
     public $followerId;
 
-    /**
-     * @var \Overtrue\LaravelFollow\UserFollower
-     */
-    protected $relation;
+    protected UserFollower $relation;
 
-    /**
-     * Event constructor.
-     *
-     * @param \Overtrue\LaravelFollow\UserFollower $relation
-     */
     public function __construct(UserFollower $relation)
     {
         $this->relation = $relation;
