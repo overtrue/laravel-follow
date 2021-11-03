@@ -233,6 +233,12 @@ foreach($users as $user) {
 | `Overtrue\LaravelFollow\Events\Followed`   | Triggered when the relationship is created. |
 | `Overtrue\LaravelFollow\Events\Unfollowed` | Triggered when the relationship is deleted. |
 
+## :heart: Sponsor me 
+
+If you like the work I do and want to support it, [you know what to do :heart:](https://github.com/sponsors/overtrue)
+
+如果你喜欢我的项目并想支持它，[点击这里 :heart:](https://github.com/sponsors/overtrue)
+
 ## Contributing
 
 You can contribute in one of three ways:
