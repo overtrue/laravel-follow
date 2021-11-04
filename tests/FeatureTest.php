@@ -216,7 +216,53 @@ class FeatureTest extends TestCase
 
 
         // with custom resolver
-        $posts = \collect(['author' => $user2], ['author' => $user3], ['author' => $user4]);
-        $user1->attachFollowStatus($posts, fn ($post) => $post['author']);
+        $users = \collect(['creator' => $user2], ['creator' => $user3], ['creator' => $user4]);
+        $user1->attachFollowStatus($users, fn ($post) => $post['creator']);
+    }
+
+    public function test_order_by_followers()
+    {
+        /* @var \Tests\User $user1 */
+        /* @var \Tests\User $user2 */
+        /* @var \Tests\User $user3 */
+        /* @var \Tests\User $user4 */
+        /* @var \Tests\User $user5 */
+        $user1 = User::create(['name' => 'user1']);
+        $user2 = User::create(['name' => 'user2']);
+        $user3 = User::create(['name' => 'user3']);
+        $user4 = User::create(['name' => 'user4']);
+        $user5 = User::create(['name' => 'user5']);
+
+        // user2: 2 followers
+        $user1->follow($user2);
+        $user3->follow($user2);
+
+        // user3: 0 followers
+        // user4: 1 followers
+        $user1->follow($user4);
+
+        // user1: 3 followers
+        $user2->follow($user1);
+        $user3->follow($user1);
+        $user4->follow($user1);
+
+        $usersOrderByFollowersCount = User::orderByFollowersCountDesc()->get();
+        // same as:
+        // $usersOrderByFollowersCount = User::withCount('followers')->orderByDesc('followers_count')->get();
+
+        $this->assertSame($user1->name, $usersOrderByFollowersCount[0]->name);
+        $this->assertEquals(3, $usersOrderByFollowersCount[0]->followers_count);
+        $this->assertSame($user2->name, $usersOrderByFollowersCount[1]->name);
+        $this->assertEquals(2, $usersOrderByFollowersCount[1]->followers_count);
+        $this->assertSame($user4->name, $usersOrderByFollowersCount[2]->name);
+        $this->assertEquals(1, $usersOrderByFollowersCount[2]->followers_count);
+        $this->assertSame($user3->name, $usersOrderByFollowersCount[3]->name);
+        $this->assertEquals(0, $usersOrderByFollowersCount[3]->followers_count);
+
+        $mostPopularUser = User::orderByFollowersCountDesc()->first();
+        // same as:
+        // $mostPopularUser = Post::withCount('followers')->orderByDesc('followers_count')->first();
+        $this->assertSame($user1->name, $mostPopularUser->name);
+        $this->assertEquals(3, $mostPopularUser->followers_count);
     }
 }

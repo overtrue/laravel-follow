@@ -207,6 +207,20 @@ $user->attachFollowStatus($users);
 ```
 
 
+### Order by followers count
+
+You can query users order by followers count with following methods:
+
+- `orderByFollowersCountDesc()`
+- `orderByFollowersCountAsc()`
+- `orderByFollowersCount(string $direction = 'desc')`
+
+example:
+
+```php
+$users = User::orderByFollowersCountDesc()->get();
+$mostPopularUser = User::orderByFollowersCountDesc()->first();
+```
 
 ### N+1 issue
 

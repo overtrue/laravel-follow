@@ -146,6 +146,21 @@ trait Followable
         return $this->isFollowing($user) && $this->isFollowedBy($user);
     }
 
+    public function scopeOrderByFollowersCount($query, string $direction = 'desc')
+    {
+        return $query->withCount('followers')->orderBy('followers_count', $direction);
+    }
+
+    public function scopeOrderByFollowersCountDesc($query)
+    {
+        return $this->scopeOrderByFollowersCount($query, 'desc');
+    }
+
+    public function scopeOrderByFollowersCountAsc($query)
+    {
+        return $this->scopeOrderByFollowersCount($query, 'asc');
+    }
+
     public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         /* @var \Illuminate\Database\Eloquent\Model $this */
