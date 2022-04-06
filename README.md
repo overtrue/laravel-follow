@@ -76,12 +76,16 @@ $user1->areFollowingEachOther($user2);
 
 ```php
 $user->followings;
+$user->approvedFollowings;
+$user->notApprovedFollowings;
 ```
 
 #### Get followers:
 
 ```php
 $user->followers;
+$user->approvedFollowers;
+$user->notApprovedFollowers;
 ```
 
 ### Follow Requests
@@ -101,22 +105,31 @@ public function needsToApproveFollowRequests()
 ```php
 // followings count
 $user->followings()->count();
+$user->approvedFollowings()->count();
+$user->notApprovedFollowings()->count();
 
 // with query where
 $user->followings()->where('gender', 'female')->count();
 
 // followers count
 $user->followers()->count();
+$user->approvedFollowers()->count();
+$user->notApprovedFollowers()->count();
 ```
 
 List with `*_count` attribute:
 
 ```php
 $users = User::withCount(['followings', 'followers'])->get();
+// or 
+$users = User::withCount(['approvedFollowings', 'approvedFollowers'])->get();
 
 foreach($users as $user) {
     // $user->followings_count;
     // $user->followers_count;
+    // or 
+    // $user->approved_followings_count;
+    // $user->approved_followers_count;
 }
 ```
 

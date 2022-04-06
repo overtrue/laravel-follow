@@ -2,6 +2,7 @@
 
 namespace Overtrue\LaravelFollow;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;

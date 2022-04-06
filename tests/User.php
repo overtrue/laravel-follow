@@ -18,7 +18,7 @@ class User extends Model
     /**
      * @return bool
      */
-    public function needsToApproveFollowRequests()
+    public function needsToApproveFollowRequests(): bool
     {
         return $this->private ?? false;
     }

@@ -6,3 +6,4 @@ composer.lock
 .phpunit.result.cache
 cghooks.lock
 
+.php-cs-fixer.cache

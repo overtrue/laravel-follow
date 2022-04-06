@@ -3,11 +3,9 @@
 namespace Tests;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
-use Overtrue\LaravelFollow\UserFollower;
 
 class FeatureTest extends TestCase
 {
@@ -214,6 +212,33 @@ class FeatureTest extends TestCase
         $this->assertTrue($users[2]->has_followed);
         $this->assertTrue($users[3]->has_followed);
 
+        // paginator
+        $users = User::paginate();
+        $user1->attachFollowStatus($users);
+
+        $users = $users->toArray()['data'];
+        $this->assertFalse($users[0]['has_followed']);
+        $this->assertTrue($users[1]['has_followed']);
+        $this->assertTrue($users[2]['has_followed']);
+        $this->assertTrue($users[3]['has_followed']);
+
+        // cursor paginator
+        $users = User::cursorPaginate();
+        $user1->attachFollowStatus($users);
+
+        $users = $users->toArray()['data'];
+        $this->assertFalse($users[0]['has_followed']);
+        $this->assertTrue($users[1]['has_followed']);
+        $this->assertTrue($users[2]['has_followed']);
+        $this->assertTrue($users[3]['has_followed']);
+
+        // cursor
+        $users = User::cursor();
+        $users = $user1->attachFollowStatus($users)->toArray();
+        $this->assertFalse($users[0]['has_followed']);
+        $this->assertTrue($users[1]['has_followed']);
+        $this->assertTrue($users[2]['has_followed']);
+        $this->assertTrue($users[3]['has_followed']);
 
         // with custom resolver
         $users = \collect(['creator' => $user2], ['creator' => $user3], ['creator' => $user4]);

@@ -3,10 +3,12 @@
 namespace Overtrue\LaravelFollow;
 
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Overtrue\LaravelFavorite\Traits\Favoriteable;
+use Illuminate\Support\Enumerable;
+use Illuminate\Support\LazyCollection;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection $followings
@@ -29,6 +31,7 @@ trait Followable
      */
     public function follow($user): array
     {
+        /** @var \Illuminate\Database\Eloquent\Model|\Overtrue\LaravelFollow\Followable $user */
         $isPending = $user->needsToApproveFollowRequests() ?: false;
 
         $this->followings()->attach($user, [
@@ -80,7 +83,6 @@ trait Followable
             $user = $user->getKey();
         }
 
-        /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
                 ->where('pivot.accepted_at', '===', null)
@@ -102,7 +104,6 @@ trait Followable
             $user = $user->getKey();
         }
 
-        /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
                 ->where('pivot.accepted_at', '!==', null)
@@ -124,7 +125,6 @@ trait Followable
             $user = $user->getKey();
         }
 
-        /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followers')) {
             return $this->followers
                 ->where('pivot.accepted_at', '!==', null)
@@ -163,7 +163,6 @@ trait Followable
 
     public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        /* @var \Illuminate\Database\Eloquent\Model $this */
         return $this->belongsToMany(
             __CLASS__,
             \config('follow.relation_table', 'user_follower'),
@@ -174,13 +173,32 @@ trait Followable
 
     public function followings(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        /* @var \Illuminate\Database\Eloquent\Model $this */
         return $this->belongsToMany(
             __CLASS__,
             \config('follow.relation_table', 'user_follower'),
             'follower_id',
             'following_id'
         )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
+    }
+
+    public function scopeApprovedFollowers(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->followers()->wherePivotNotNull('accepted_at');
+    }
+
+    public function scopeNotApprovedFollowers(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->followers()->wherePivotNull('accepted_at');
+    }
+
+    public function scopeApprovedFollowings(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->followings()->wherePivotNotNull('accepted_at');
+    }
+
+    public function scopeNotApprovedFollowings(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->followings()->wherePivotNull('accepted_at');
     }
 
     public function attachFollowStatus($followables, callable $resolver = null)
@@ -196,14 +214,18 @@ trait Followable
                 $followables = $followables->getCollection();
                 break;
             case $followables instanceof Paginator:
+            case $followables instanceof CursorPaginator:
                 $followables = \collect($followables->items());
+                break;
+            case $followables instanceof LazyCollection:
+                $followables = \collect(\iterator_to_array($followables->getIterator()));
                 break;
             case \is_array($followables):
                 $followables = \collect($followables);
                 break;
         }
 
-        \abort_if(!($followables instanceof Collection), 422, 'Invalid $followables type.');
+        \abort_if(!($followables instanceof Enumerable), 422, 'Invalid $followables type.');
 
         $followed = UserFollower::where('follower_id', $this->getKey())->get();
 

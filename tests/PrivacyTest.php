@@ -64,4 +64,29 @@ class PrivacyTest extends TestCase
         $this->assertTrue($user1->hasRequestedToFollow($user2));
         $this->assertFalse($user2->isFollowedBy($user1));
     }
+
+    public function test_approved_scopes()
+    {
+        $user1 = User::create(['name' => 'user1']);
+        $user2 = User::create(['name' => 'user2', 'private' => true]);
+
+        $user1->follow($user2);
+
+        $this->assertCount(1, $user1->followings()->get());
+        $this->assertCount(0, $user1->approvedFollowings()->get());
+        $this->assertCount(1, $user1->notApprovedFollowings()->get());
+
+        $this->assertCount(1, $user2->followers()->get());
+        $this->assertCount(0, $user2->approvedFollowers()->get());
+        $this->assertCount(1, $user2->notApprovedFollowers()->get());
+
+        $user2->acceptFollowRequestFrom($user1);
+
+        $this->assertCount(1, $user1->followings()->get());
+        $this->assertCount(1, $user1->approvedFollowings()->get());
+        $this->assertCount(0, $user1->notApprovedFollowings()->get());
+        $this->assertCount(1, $user2->followers()->get());
+        $this->assertCount(1, $user2->approvedFollowers()->get());
+        $this->assertCount(0, $user2->notApprovedFollowers()->get());
+    }
 }
