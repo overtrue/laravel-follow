@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
@@ -289,5 +290,25 @@ class FeatureTest extends TestCase
         // $mostPopularUser = Post::withCount('followers')->orderByDesc('followers_count')->first();
         $this->assertSame($user1->name, $mostPopularUser->name);
         $this->assertEquals(3, $mostPopularUser->followers_count);
+    }
+
+    public function test_repeat_actions()
+    {
+        $user1 = User::create(['name' => 'user1']);
+        $user2 = User::create(['name' => 'user2']);
+        $user3 = User::create(['name' => 'user2']);
+        $user4 = User::create(['name' => 'user2']);
+
+        $user1->follow($user2);
+        $user1->follow($user2);
+        $user1->follow($user2);
+        $user1->follow($user3);
+        $user1->follow($user4);
+
+        $this->assertDatabaseHas('user_follower', ['follower_id' => $user1->id, 'following_id' => $user2->id]);
+        $this->assertDatabaseHas('user_follower', ['follower_id' => $user1->id, 'following_id' => $user3->id]);
+        $this->assertDatabaseHas('user_follower', ['follower_id' => $user1->id, 'following_id' => $user4->id]);
+
+        $this->assertDatabaseCount('user_follower', 3);
     }
 }

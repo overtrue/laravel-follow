@@ -34,9 +34,9 @@ trait Followable
         /** @var \Illuminate\Database\Eloquent\Model|\Overtrue\LaravelFollow\Followable $user */
         $isPending = $user->needsToApproveFollowRequests() ?: false;
 
-        $this->followings()->attach($user, [
+        $this->followings()->syncWithPivotValues($user, [
             'accepted_at' => $isPending ? null : now()
-        ]);
+        ], false);
 
         return ['pending' => $isPending];
     }
