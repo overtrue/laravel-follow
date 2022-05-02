@@ -19,7 +19,7 @@ class FeatureTest extends TestCase
         config(['auth.providers.users.model' => User::class]);
     }
 
-    public function test_basic_features()
+    public function test_user_can_follow_users()
     {
         $user1 = User::create(['name' => 'user1']);
         $user2 = User::create(['name' => 'user2']);
@@ -29,7 +29,9 @@ class FeatureTest extends TestCase
         Event::assertDispatched(
             Followed::class,
             function ($event) use ($user1, $user2) {
-                return $event->followingId === $user2->id && $event->followerId === $user1->id;
+                return $event->followable_type === $user2->getMorphClass()
+                    && $event->followable_id === $user2->id
+                    && $event->user_id === $user1->id;
             }
         );
 
@@ -41,7 +43,40 @@ class FeatureTest extends TestCase
         Event::assertDispatched(
             Unfollowed::class,
             function ($event) use ($user1, $user2) {
-                return $event->followingId === $user2->id && $event->followerId === $user1->id;
+                return $event->followable_type === $user2->getMorphClass()
+                    && $event->followable_id === $user2->id
+                    && $event->user_id === $user1->id;
+            }
+        );
+    }
+
+    public function test_user_can_follow_channels()
+    {
+        $user = User::create(['name' => 'user1']);
+        $channel = Channel::create(['name' => 'Laravel']);
+
+        $user->follow($channel);
+
+        Event::assertDispatched(
+            Followed::class,
+            function ($event) use ($user, $channel) {
+                return $event->followable_type === $channel->getMorphClass()
+                    && $event->followable_id === $channel->id
+                    && $event->user_id === $user->id;
+            }
+        );
+
+        $this->assertTrue($user->isFollowing($channel));
+        $this->assertTrue($channel->isFollowedBy($user));
+
+        $user->unfollow($channel);
+
+        Event::assertDispatched(
+            Unfollowed::class,
+            function ($event) use ($user, $channel) {
+                return $event->followable_type === $channel->getMorphClass()
+                    && $event->followable_id === $channel->id
+                    && $event->user_id === $user->id;
             }
         );
     }
@@ -78,7 +113,7 @@ class FeatureTest extends TestCase
         $user1UnfollowedUsers = User::whereNotIn(
             'id',
             function ($q) use ($user1) {
-                $q->select('following_id')->from('user_follower')->where('follower_id', $user1->id);
+                $q->select('followable_id')->from('followables')->where('user_id', $user1->id);
             }
         )->where('id', '<>', $user1->id)->get()->toArray();
         $this->assertCount(2, $user1UnfollowedUsers);
@@ -133,7 +168,7 @@ class FeatureTest extends TestCase
         $this->assertSame(3, $sqls->count());
 
         // with eager loading
-        $user4->load('followers');
+        $user4->load('followables');
         $sqls = $this->getQueryLog(
             function () use ($user1, $user2, $user3, $user4) {
                 $user4->isFollowedBy($user1);
@@ -142,29 +177,10 @@ class FeatureTest extends TestCase
             }
         );
         $this->assertSame(0, $sqls->count());
-
-        // -- follow each other
-        $user4->follow($user1);
-        // without loading
-        $sqls = $this->getQueryLog(
-            function () use ($user1, $user2, $user3, $user4) {
-                $user1->areFollowingEachOther($user4);
-            }
-        );
-        $this->assertSame(1, $sqls->count());
-
-        // with eager loading
-        $user1->load('followings', 'followers');
-        $sqls = $this->getQueryLog(
-            function () use ($user1, $user2, $user3, $user4) {
-                $user1->areFollowingEachOther($user4);
-            }
-        );
-        $this->assertSame(0, $sqls->count());
     }
 
     /**
-     * @param \Closure $callback
+     * @param  \Closure  $callback
      *
      * @return \Illuminate\Support\Collection
      */
@@ -192,7 +208,9 @@ class FeatureTest extends TestCase
         $user1->follow($user2);
         $user1->follow($user3);
         $user1->follow($user4);
+
         $user2->follow($user4);
+
         $user3->follow($user4);
 
         $users = User::all();
@@ -205,41 +223,41 @@ class FeatureTest extends TestCase
 
         $this->assertSame(1, $sqls->count());
 
-        $this->assertFalse($users[0]->has_followed);
-        $this->assertTrue($users[1]->has_followed);
+        $this->assertNull($users[0]->followed_at);
+        $this->assertNotNull($users[1]->followed_at);
 
         $this->assertInstanceOf(Carbon::class, $users[1]->followed_at);
 
-        $this->assertTrue($users[2]->has_followed);
-        $this->assertTrue($users[3]->has_followed);
+        $this->assertNotNull($users[2]->followed_at);
+        $this->assertNotNull($users[3]->followed_at);
 
         // paginator
         $users = User::paginate();
         $user1->attachFollowStatus($users);
 
         $users = $users->toArray()['data'];
-        $this->assertFalse($users[0]['has_followed']);
-        $this->assertTrue($users[1]['has_followed']);
-        $this->assertTrue($users[2]['has_followed']);
-        $this->assertTrue($users[3]['has_followed']);
+        $this->assertNull($users[0]['followed_at']);
+        $this->assertNotNull($users[1]['followed_at']);
+        $this->assertNotNull($users[2]['followed_at']);
+        $this->assertNotNull($users[3]['followed_at']);
 
         // cursor paginator
         $users = User::cursorPaginate();
         $user1->attachFollowStatus($users);
 
         $users = $users->toArray()['data'];
-        $this->assertFalse($users[0]['has_followed']);
-        $this->assertTrue($users[1]['has_followed']);
-        $this->assertTrue($users[2]['has_followed']);
-        $this->assertTrue($users[3]['has_followed']);
+        $this->assertNull($users[0]['followed_at']);
+        $this->assertNotNull($users[1]['followed_at']);
+        $this->assertNotNull($users[2]['followed_at']);
+        $this->assertNotNull($users[3]['followed_at']);
 
         // cursor
         $users = User::cursor();
         $users = $user1->attachFollowStatus($users)->toArray();
-        $this->assertFalse($users[0]['has_followed']);
-        $this->assertTrue($users[1]['has_followed']);
-        $this->assertTrue($users[2]['has_followed']);
-        $this->assertTrue($users[3]['has_followed']);
+        $this->assertNull($users[0]['followed_at']);
+        $this->assertNotNull($users[1]['followed_at']);
+        $this->assertNotNull($users[2]['followed_at']);
+        $this->assertNotNull($users[3]['followed_at']);
 
         // with custom resolver
         $users = \collect(['creator' => $user2], ['creator' => $user3], ['creator' => $user4]);
@@ -287,7 +305,7 @@ class FeatureTest extends TestCase
 
         $mostPopularUser = User::orderByFollowersCountDesc()->first();
         // same as:
-        // $mostPopularUser = Post::withCount('followers')->orderByDesc('followers_count')->first();
+        // $mostPopularUser = Post::withCount('followables')->orderByDesc('followers_count')->first();
         $this->assertSame($user1->name, $mostPopularUser->name);
         $this->assertEquals(3, $mostPopularUser->followers_count);
     }
@@ -305,10 +323,10 @@ class FeatureTest extends TestCase
         $user1->follow($user3);
         $user1->follow($user4);
 
-        $this->assertDatabaseHas('user_follower', ['follower_id' => $user1->id, 'following_id' => $user2->id]);
-        $this->assertDatabaseHas('user_follower', ['follower_id' => $user1->id, 'following_id' => $user3->id]);
-        $this->assertDatabaseHas('user_follower', ['follower_id' => $user1->id, 'following_id' => $user4->id]);
+        $this->assertDatabaseHas('followables', ['user_id' => $user1->id, 'followable_id' => $user2->id, 'followable_type' => $user2->getMorphClass()]);
+        $this->assertDatabaseHas('followables', ['user_id' => $user1->id, 'followable_id' => $user3->id, 'followable_type' => $user3->getMorphClass()]);
+        $this->assertDatabaseHas('followables', ['user_id' => $user1->id, 'followable_id' => $user4->id, 'followable_type' => $user4->getMorphClass()]);
 
-        $this->assertDatabaseCount('user_follower', 3);
+        $this->assertDatabaseCount('followables', 3);
     }
 }

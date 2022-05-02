@@ -3,11 +3,13 @@
 namespace Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Overtrue\LaravelFollow\Followable;
+use Overtrue\LaravelFollow\Traits\Followable;
+use Overtrue\LaravelFollow\Traits\Follower;
 
 class User extends Model
 {
     use Followable;
+    use Follower;
 
     protected $fillable = ['name', 'private'];
 

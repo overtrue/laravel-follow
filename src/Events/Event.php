@@ -2,26 +2,21 @@
 
 namespace Overtrue\LaravelFollow\Events;
 
-use Overtrue\LaravelFollow\UserFollower;
+use Overtrue\LaravelFollow\Followable;
 
 class Event
 {
-    /**
-     * @var int|string
-     */
-    public $followingId;
+    public int|string $followable_id;
+    public int|string $followable_type;
+    public int|string $follower_id;
+    public int|string $user_id;
 
-    /**
-     * @var int|string
-     */
-    public $followerId;
+    protected Followable $relation;
 
-    protected UserFollower $relation;
-
-    public function __construct(UserFollower $relation)
+    public function __construct(Followable $follower)
     {
-        $this->relation = $relation;
-        $this->followerId = $relation->follower_id;
-        $this->followingId = $relation->following_id;
+        $this->follower_id = $this->user_id = $follower->{\config('follow.user_foreign_key', 'user_id')};
+        $this->followable_id = $follower->followable_id;
+        $this->followable_type = $follower->followable_type;
     }
 }

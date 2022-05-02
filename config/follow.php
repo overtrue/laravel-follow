@@ -2,7 +2,22 @@
 
 return [
 	/*
-     * Table name for followers records.
+     * Use uuid as primary key.
      */
-	'relation_table' => 'user_follower',
+    'uuids' => false,
+
+    /*
+     * User tables foreign key name.
+     */
+    'user_foreign_key' => 'user_id',
+
+    /*
+     * Table name for followers table.
+     */
+    'followables_table' => 'followables',
+
+    /**
+     * Model class name for followers table.
+     */
+    'followables_model' => \Overtrue\LaravelFollow\Followable::class,
 ];

@@ -36,18 +36,43 @@ php artisan vendor:publish
 
 ### Traits
 
-#### `Overtrue\LaravelFollow\Followable`
+#### `Overtrue\LaravelFollow\Traits\Follower`
+
+Add the Follower trait to your user model:
 
 ```php
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Overtrue\LaravelFavorite\Traits\Favoriter;
+
+class User extends Authenticatable
+{
+    use Follower;
+
+    <...>
+}
+```
+
+#### `Overtrue\LaravelFollow\Followable`
+
+Then add the Followable trait to your followable model, for example `App\User`:
+
+```php
 use Overtrue\LaravelFollow\Followable;
 
 class User extends Authenticatable
 {
+    use Followable;
     <...>
+}
+```
+
+or any other model:
+
+```php
+use Overtrue\LaravelFollow\Followable;
+
+class Channel extends Model
+{
     use Followable;
     <...>
 }
@@ -68,8 +93,6 @@ $user1->rejectFollowRequestFrom($user2);
 $user1->isFollowing($user2);
 $user2->isFollowedBy($user1);
 $user2->hasRequestedToFollow($user1);
-
-$user1->areFollowingEachOther($user2);
 ```
 
 #### Get followings:
@@ -120,7 +143,7 @@ $user->notApprovedFollowers()->count();
 List with `*_count` attribute:
 
 ```php
-$users = User::withCount(['followings', 'followers'])->get();
+$users = User::withCount(['followings', 'followables'])->get();
 // or 
 $users = User::withCount(['approvedFollowings', 'approvedFollowers'])->get();
 
@@ -135,7 +158,7 @@ foreach($users as $user) {
 
 ### Attach user follow status to followable collection
 
-You can use `Followable::attachFollowStatus(Collection $followables)` to attach the user favorite status, it will set `has_followed` attribute to each model of `$followables`:
+You can use `Follower::attachFollowStatus(Collection $followables)` to attach the user favorite status, it will set `has_followed` attribute to each model of `$followables`:
 
 #### For model
 
@@ -238,7 +261,7 @@ foreach($users as $user) {
     $user->isFollowing(2);
 }
 
-$users = User::with('followers')->get();
+$users = User::with('followables')->get();
 
 foreach($users as $user) {
     $user->isFollowedBy(2);

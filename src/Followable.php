@@ -2,245 +2,95 @@
 
 namespace Overtrue\LaravelFollow;
 
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\CursorPaginator;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Enumerable;
-use Illuminate\Support\LazyCollection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Str;
+use Overtrue\LaravelFollow\Events\Followed;
+use Overtrue\LaravelFollow\Events\Unfollowed;
+use function config;
 
 /**
- * @property \Illuminate\Database\Eloquent\Collection $followings
- * @property \Illuminate\Database\Eloquent\Collection $followers
+ * @property int|string $followable_id;
+ * @property int|string $followable_type;
+ * @property int|string $user_id;
+ * @method HasMany of(Model $model)
+ * @method HasMany followedBy(Model $model)
+ * @method HasMany withType(string $type)
  */
-trait Followable
+class Followable extends Model
 {
-    /**
-     * @return bool
-     */
-    public function needsToApproveFollowRequests(): bool
+    protected $guarded = [];
+
+    protected $dispatchesEvents = [
+        'created' => Followed::class,
+        'deleted' => Unfollowed::class,
+    ];
+
+    protected $dates = ['accepted_at'];
+
+    public function __construct(array $attributes = [])
     {
-        return false;
+        $this->table = config('follow.followables_table', 'followables');
+
+        parent::__construct($attributes);
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     *
-     * @return array
-     */
-    public function follow($user): array
+    protected static function boot()
     {
-        /** @var \Illuminate\Database\Eloquent\Model|\Overtrue\LaravelFollow\Followable $user */
-        $isPending = $user->needsToApproveFollowRequests() ?: false;
+        parent::boot();
 
-        $this->followings()->syncWithPivotValues($user, [
-            'accepted_at' => $isPending ? null : now()
-        ], false);
+        self::saving(function ($follower) {
+            $userForeignKey = config('follow.user_foreign_key', 'user_id');
+            $follower->setAttribute($userForeignKey, $follower->{$userForeignKey} ?: auth()->id());
 
-        return ['pending' => $isPending];
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     */
-    public function unfollow($user)
-    {
-        $this->followings()->detach($user);
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     *
-     */
-    public function toggleFollow($user)
-    {
-        $this->isFollowing($user) ? $this->unfollow($user) : $this->follow($user);
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     */
-    public function rejectFollowRequestFrom($user)
-    {
-        $this->followers()->detach($user);
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     */
-    public function acceptFollowRequestFrom($user)
-    {
-        $this->followers()->updateExistingPivot($user, ['accepted_at' => now()]);
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     */
-    public function hasRequestedToFollow($user): bool
-    {
-        if ($user instanceof Model) {
-            $user = $user->getKey();
-        }
-
-        if ($this->relationLoaded('followings')) {
-            return $this->followings
-                ->where('pivot.accepted_at', '===', null)
-                ->contains($user);
-        }
-
-        return $this->followings()
-            ->wherePivot('accepted_at', null)
-            ->where($this->getQualifiedKeyName(), $user)
-            ->exists();
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     */
-    public function isFollowing($user): bool
-    {
-        if ($user instanceof Model) {
-            $user = $user->getKey();
-        }
-
-        if ($this->relationLoaded('followings')) {
-            return $this->followings
-                ->where('pivot.accepted_at', '!==', null)
-                ->contains($user);
-        }
-
-        return $this->followings()
-            ->wherePivot('accepted_at', '!=', null)
-            ->where($this->getQualifiedKeyName(), $user)
-            ->exists();
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     */
-    public function isFollowedBy($user): bool
-    {
-        if ($user instanceof Model) {
-            $user = $user->getKey();
-        }
-
-        if ($this->relationLoaded('followers')) {
-            return $this->followers
-                ->where('pivot.accepted_at', '!==', null)
-                ->contains($user);
-        }
-
-        return $this->followers()
-            ->wherePivot('accepted_at', '!=', null)
-            ->where($this->getQualifiedKeyName(), $user)
-            ->exists();
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|int $user
-     */
-    public function areFollowingEachOther($user): bool
-    {
-        /* @var \Illuminate\Database\Eloquent\Model $user*/
-        return $this->isFollowing($user) && $this->isFollowedBy($user);
-    }
-
-    public function scopeOrderByFollowersCount($query, string $direction = 'desc')
-    {
-        return $query->withCount('followers')->orderBy('followers_count', $direction);
-    }
-
-    public function scopeOrderByFollowersCountDesc($query)
-    {
-        return $this->scopeOrderByFollowersCount($query, 'desc');
-    }
-
-    public function scopeOrderByFollowersCountAsc($query)
-    {
-        return $this->scopeOrderByFollowersCount($query, 'asc');
-    }
-
-    public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(
-            __CLASS__,
-            \config('follow.relation_table', 'user_follower'),
-            'following_id',
-            'follower_id'
-        )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
-    }
-
-    public function followings(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(
-            __CLASS__,
-            \config('follow.relation_table', 'user_follower'),
-            'follower_id',
-            'following_id'
-        )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
-    }
-
-    public function scopeApprovedFollowers(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->followers()->wherePivotNotNull('accepted_at');
-    }
-
-    public function scopeNotApprovedFollowers(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->followers()->wherePivotNull('accepted_at');
-    }
-
-    public function scopeApprovedFollowings(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->followings()->wherePivotNotNull('accepted_at');
-    }
-
-    public function scopeNotApprovedFollowings(Builder $query): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->followings()->wherePivotNull('accepted_at');
-    }
-
-    public function attachFollowStatus($followables, callable $resolver = null)
-    {
-        $returnFirst = false;
-
-        switch (true) {
-            case $followables instanceof Model:
-                $returnFirst = true;
-                $followables = \collect([$followables]);
-                break;
-            case $followables instanceof LengthAwarePaginator:
-                $followables = $followables->getCollection();
-                break;
-            case $followables instanceof Paginator:
-            case $followables instanceof CursorPaginator:
-                $followables = \collect($followables->items());
-                break;
-            case $followables instanceof LazyCollection:
-                $followables = \collect(\iterator_to_array($followables->getIterator()));
-                break;
-            case \is_array($followables):
-                $followables = \collect($followables);
-                break;
-        }
-
-        \abort_if(!($followables instanceof Enumerable), 422, 'Invalid $followables type.');
-
-        $followed = UserFollower::where('follower_id', $this->getKey())->get();
-
-        $followables->map(function ($followable) use ($followed, $resolver) {
-            $resolver = $resolver ?? fn ($m) => $m;
-            $followable = $resolver($followable);
-
-            if ($followable && \in_array(Followable::class, \class_uses($followable))) {
-                $item = $followed->where('following_id', $followable->getKey())->first();
-                $followable->setAttribute('has_followed', !!$item);
-                $followable->setAttribute('followed_at', $item ? $item->created_at : null);
-                $followable->setAttribute('follow_accepted_at', $item ? $item->accepted_at : null);
+            if (config('follow.uuids')) {
+                $follower->setAttribute($follower->getKeyName(), $follower->{$follower->getKeyName()} ?: (string) Str::orderedUuid());
             }
         });
+    }
 
-        return $returnFirst ? $followables->first() : $followables;
+    public function followable(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(config('auth.providers.users.model'), config('follow.user_foreign_key', 'user_id'));
+    }
+
+    public function follower(): BelongsTo
+    {
+        return $this->user();
+    }
+
+    public function scopeWithType(Builder $query, string $type): Builder
+    {
+        return $query->where('followable_type', app($type)->getMorphClass());
+    }
+
+    public function scopeOf(Builder $query, Model $model): Builder
+    {
+        return $query->where('followable_type', $model->getMorphClass())
+                    ->where('followable_id', $model->getKey());
+    }
+
+    public function scopeFollowedBy(Builder $query, Model $follower): Builder
+    {
+        return $query->where(config('follow.user_foreign_key', 'user_id'), $follower->getKey());
+    }
+
+    public function scopeAccepted(Builder $query): Builder
+    {
+        return $query->whereNotNull('accepted_at');
+    }
+
+    public function scopeNotAccepted(Builder $query): Builder
+    {
+        return $query->whereNull('accepted_at');
     }
 }
