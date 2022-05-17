@@ -42,7 +42,7 @@ Add the Follower trait to your user model:
 
 ```php
 
-use Overtrue\LaravelFavorite\Traits\Favoriter;
+use Overtrue\LaravelFollow\Traits\Follower;
 
 class User extends Authenticatable
 {
@@ -158,7 +158,7 @@ foreach($users as $user) {
 
 ### Attach user follow status to followable collection
 
-You can use `Follower::attachFollowStatus(Collection $followables)` to attach the user favorite status, it will set `has_followed` attribute to each model of `$followables`:
+You can use `Follower::attachFollowStatus(Collection $followables)` to attach the user follow status, it will set `has_followed` attribute to each model of `$followables`:
 
 #### For model
 

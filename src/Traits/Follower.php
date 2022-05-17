@@ -30,6 +30,10 @@ trait Follower
     #[ArrayShape(['pending' => "mixed"])]
     public function follow(Model $followable): array
     {
+        if ($followable->is($this)) {
+            throw new InvalidArgumentException('Cannot follow yourself.');
+        }
+
         if (!in_array(Followable::class, class_uses($followable))) {
             throw new InvalidArgumentException('The followable model must use the Followable trait.');
         }

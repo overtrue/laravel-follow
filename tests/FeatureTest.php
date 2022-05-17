@@ -44,8 +44,9 @@ class FeatureTest extends TestCase
             Unfollowed::class,
             function ($event) use ($user1, $user2) {
                 return $event->followable_type === $user2->getMorphClass()
-                    && $event->followable_id === $user2->id
-                    && $event->user_id === $user1->id;
+                    && $event->followable_id == $user2->id
+                    && $event->follower_id == $user1->id
+                    && $event->user_id == $user1->id;
             }
         );
     }
@@ -61,8 +62,8 @@ class FeatureTest extends TestCase
             Followed::class,
             function ($event) use ($user, $channel) {
                 return $event->followable_type === $channel->getMorphClass()
-                    && $event->followable_id === $channel->id
-                    && $event->user_id === $user->id;
+                    && $event->followable_id == $channel->id
+                    && $event->user_id == $user->id;
             }
         );
 
@@ -75,8 +76,8 @@ class FeatureTest extends TestCase
             Unfollowed::class,
             function ($event) use ($user, $channel) {
                 return $event->followable_type === $channel->getMorphClass()
-                    && $event->followable_id === $channel->id
-                    && $event->user_id === $user->id;
+                    && $event->followable_id == $channel->id
+                    && $event->user_id == $user->id;
             }
         );
     }
@@ -328,5 +329,13 @@ class FeatureTest extends TestCase
         $this->assertDatabaseHas('followables', ['user_id' => $user1->id, 'followable_id' => $user4->id, 'followable_type' => $user4->getMorphClass()]);
 
         $this->assertDatabaseCount('followables', 3);
+    }
+
+    public function test_follower_cannot_follow_self()
+    {
+        $user1 = User::create(['name' => 'user1']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $user1->follow($user1);
     }
 }
