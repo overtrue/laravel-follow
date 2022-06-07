@@ -52,12 +52,12 @@ class User extends Authenticatable
 }
 ```
 
-#### `Overtrue\LaravelFollow\Followable`
+#### `Overtrue\LaravelFollow\Traits\Followable`
 
 Then add the Followable trait to your followable model, for example `App\User`:
 
 ```php
-use Overtrue\LaravelFollow\Followable;
+use Overtrue\LaravelFollow\Traits\Followable;
 
 class User extends Authenticatable
 {
@@ -69,7 +69,7 @@ class User extends Authenticatable
 or any other model:
 
 ```php
-use Overtrue\LaravelFollow\Followable;
+use Overtrue\LaravelFollow\Traits\Followable;
 
 class Channel extends Model
 {
