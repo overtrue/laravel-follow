@@ -104,8 +104,8 @@ trait Follower
          * @var Model $this
          */
         return $this->hasMany(
-            config('favorite.followables_model', \Overtrue\LaravelFollow\Followable::class),
-            config('favorite.user_foreign_key', 'user_id'),
+            config('follow.followables_model', \Overtrue\LaravelFollow\Followable::class),
+            config('follow.user_foreign_key', 'user_id'),
             $this->getKeyName()
         );
     }
