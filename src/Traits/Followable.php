@@ -78,7 +78,7 @@ trait Followable
          * @var Model $this
          */
         return $this->hasMany(
-            config('favorite.followables_model', \Overtrue\LaravelFollow\Followable::class),
+            config('follow.followables_model', \Overtrue\LaravelFollow\Followable::class),
             'followable_id',
         )->where('followable_type', $this->getMorphClass());
     }
@@ -89,7 +89,7 @@ trait Followable
             config('auth.providers.users.model'),
             config('follow.followables_table', 'followables'),
             'followable_id',
-            config('favorite.user_foreign_key', 'user_id')
+            config('follow.user_foreign_key', 'user_id')
         )->where('followable_type', $this->getMorphClass())
             ->withPivot(['accepted_at']);
     }
