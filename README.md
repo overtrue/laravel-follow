@@ -104,7 +104,7 @@ $user->notApprovedFollowings;
 ```
 
 ```php
-foreach($user->followings as $following)
+foreach($user->followings()->with('followable')->get() as $following)
 {
     $following->created_at; // followed at
     
@@ -122,7 +122,7 @@ $user->notApprovedFollowers;
 ```
 
 ```php
-foreach($user->followers as $follower)
+foreach($user->followers()->with('follower')->get() as $follower)
 {
     $follower->created_at; // followed at
     
