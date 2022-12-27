@@ -103,6 +103,16 @@ $user->approvedFollowings;
 $user->notApprovedFollowings;
 ```
 
+```php
+foreach($user->followings as $following)
+{
+    $following->created_at; // followed at
+    
+    $following->followable->nickname; // the user attributes
+}
+```
+
+
 #### Get followers:
 
 ```php
@@ -110,6 +120,16 @@ $user->followers;
 $user->approvedFollowers;
 $user->notApprovedFollowers;
 ```
+
+```php
+foreach($user->followers as $follower)
+{
+    $follower->created_at; // followed at
+    
+    $follower->follower->nickname; // the user attributes
+}
+```
+
 
 ### Follow Requests
 
