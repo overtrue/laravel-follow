@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
@@ -180,11 +179,6 @@ class FeatureTest extends TestCase
         $this->assertSame(0, $sqls->count());
     }
 
-    /**
-     * @param  \Closure  $callback
-     *
-     * @return \Illuminate\Support\Collection
-     */
     protected function getQueryLog(\Closure $callback): \Illuminate\Support\Collection
     {
         $sqls = \collect([]);

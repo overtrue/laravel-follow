@@ -7,8 +7,11 @@ use Overtrue\LaravelFollow\Followable;
 class Event
 {
     public int|string $followable_id;
+
     public int|string $followable_type;
+
     public int|string $follower_id;
+
     public int|string $user_id;
 
     protected Followable $relation;

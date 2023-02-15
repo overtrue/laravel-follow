@@ -2,21 +2,21 @@
 
 namespace Overtrue\LaravelFollow;
 
+use function config;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Str;
 use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
-use function config;
 
 /**
  * @property int|string $followable_id;
  * @property int|string $followable_type;
  * @property int|string $user_id;
+ *
  * @method HasMany of(Model $model)
  * @method HasMany followedBy(Model $model)
  * @method HasMany withType(string $type)

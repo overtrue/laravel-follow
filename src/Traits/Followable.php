@@ -2,18 +2,12 @@
 
 namespace Overtrue\LaravelFollow\Traits;
 
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Builder;
+use function config;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Pagination\CursorPaginator;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Enumerable;
-use Illuminate\Support\LazyCollection;
 use Overtrue\LaravelFollow\Traits\Follower as Follower;
-use function config;
 
 /**
  * @property Collection $followables
@@ -28,7 +22,7 @@ trait Followable
 
     public function rejectFollowRequestFrom(Model $follower): void
     {
-        if (!in_array(Follower::class, \class_uses($follower))) {
+        if (! in_array(Follower::class, \class_uses($follower))) {
             throw new \InvalidArgumentException('The model must use the Follower trait.');
         }
 
@@ -37,7 +31,7 @@ trait Followable
 
     public function acceptFollowRequestFrom(Model $follower): void
     {
-        if (!in_array(Follower::class, \class_uses($follower))) {
+        if (! in_array(Follower::class, \class_uses($follower))) {
             throw new \InvalidArgumentException('The model must use the Follower trait.');
         }
 
@@ -46,7 +40,7 @@ trait Followable
 
     public function isFollowedBy(Model $follower): bool
     {
-        if (!in_array(Follower::class, \class_uses($follower))) {
+        if (! in_array(Follower::class, \class_uses($follower))) {
             throw new \InvalidArgumentException('The model must use the Follower trait.');
         }
 

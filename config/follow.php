@@ -1,7 +1,7 @@
 <?php
 
 return [
-	/*
+    /*
      * Use uuid as primary key.
      */
     'uuids' => false,

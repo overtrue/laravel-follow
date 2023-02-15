@@ -2,11 +2,6 @@
 
 namespace Tests;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
-use Overtrue\LaravelFollow\Events\Followed;
-use Overtrue\LaravelFollow\Events\Unfollowed;
-
 class PrivacyTest extends TestCase
 {
     public function setUp(): void
