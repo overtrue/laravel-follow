@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [5.x]
   pull_request:
-    branches: [master]
+    branches: [5.x]
 
 jobs:
   phpcs:
@@ -20,7 +20,7 @@ jobs:
   phpunit:
     strategy:
       matrix:
-        php_version: [8.0, 8.1]
+        php_version: [8.1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
