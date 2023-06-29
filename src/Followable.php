@@ -76,7 +76,7 @@ class Followable extends Model
     public function scopeOf(Builder $query, Model $model): Builder
     {
         return $query->where('followable_type', $model->getMorphClass())
-                    ->where('followable_id', $model->getKey());
+            ->where('followable_id', $model->getKey());
     }
 
     public function scopeFollowedBy(Builder $query, Model $follower): Builder
