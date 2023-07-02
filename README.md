@@ -29,7 +29,7 @@ composer require overtrue/laravel-follow -vvv
 ### Configuration and Migrations
 
 ```shell
-php artisan vendor:publish
+php artisan vendor:publish --provider="Overtrue\LaravelFollow\FollowServiceProvider"
 ```
 
 ## Usage
