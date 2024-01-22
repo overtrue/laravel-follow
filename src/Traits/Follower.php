@@ -153,7 +153,7 @@ trait Follower
                 $item = $followed->where('followable_id', $followable->getKey())
                     ->where('followable_type', $followable->getMorphClass())
                     ->first();
-                $followable->setAttribute('has_followed', !!$item);
+                $followable->setAttribute('has_followed', (bool) $item);
                 $followable->setAttribute('followed_at', $item ? $item->created_at : null);
                 $followable->setAttribute('follow_accepted_at', $item ? $item->accepted_at : null);
             }
