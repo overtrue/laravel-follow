@@ -232,9 +232,16 @@ class FeatureTest extends TestCase
 
         $users = $users->toArray()['data'];
         $this->assertNull($users[0]['followed_at']);
+        $this->assertFalse($users[0]['has_followed']);
+
         $this->assertNotNull($users[1]['followed_at']);
+        $this->assertTrue($users[1]['has_followed']);
+
         $this->assertNotNull($users[2]['followed_at']);
+        $this->assertTrue($users[2]['has_followed']);
+
         $this->assertNotNull($users[3]['followed_at']);
+        $this->assertTrue($users[3]['has_followed']);
 
         // cursor paginator
         $users = User::cursorPaginate();
@@ -242,17 +249,31 @@ class FeatureTest extends TestCase
 
         $users = $users->toArray()['data'];
         $this->assertNull($users[0]['followed_at']);
+        $this->assertFalse($users[0]['has_followed']);
+
         $this->assertNotNull($users[1]['followed_at']);
+        $this->assertTrue($users[1]['has_followed']);
+
         $this->assertNotNull($users[2]['followed_at']);
+        $this->assertTrue($users[2]['has_followed']);
+
         $this->assertNotNull($users[3]['followed_at']);
+        $this->assertTrue($users[3]['has_followed']);
 
         // cursor
         $users = User::cursor();
         $users = $user1->attachFollowStatus($users)->toArray();
         $this->assertNull($users[0]['followed_at']);
+        $this->assertFalse($users[0]['has_followed']);
+
         $this->assertNotNull($users[1]['followed_at']);
+        $this->assertTrue($users[1]['has_followed']);
+
         $this->assertNotNull($users[2]['followed_at']);
+        $this->assertTrue($users[2]['has_followed']);
+
         $this->assertNotNull($users[3]['followed_at']);
+        $this->assertTrue($users[3]['has_followed']);
 
         // with custom resolver
         $users = \collect(['creator' => $user2], ['creator' => $user3], ['creator' => $user4]);
