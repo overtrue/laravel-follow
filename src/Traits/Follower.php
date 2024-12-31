@@ -117,7 +117,7 @@ trait Follower
         return $this->followings()->notAccepted();
     }
 
-    public function attachFollowStatus($followables, callable $resolver = null)
+    public function attachFollowStatus($followables, ?callable $resolver = null)
     {
         $returnFirst = false;
 
