@@ -2,9 +2,6 @@
 
 namespace Overtrue\LaravelFollow\Traits;
 
-use function abort_if;
-use function class_uses;
-use function collect;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -13,11 +10,15 @@ use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Enumerable;
 use Illuminate\Support\LazyCollection;
-use function in_array;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
+
+use function abort_if;
+use function class_uses;
+use function collect;
+use function in_array;
 use function is_array;
 use function iterator_to_array;
-use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @property Collection $followings
@@ -35,7 +36,7 @@ trait Follower
             throw new InvalidArgumentException('The followable model must use the Followable trait.');
         }
 
-        /** @var \Illuminate\Database\Eloquent\Model|\Overtrue\LaravelFollow\Traits\Followable $followable */
+        /** @var Model|Followable $followable */
         $isPending = $followable->needsToApproveFollowRequests() ?: false;
 
         $this->followings()->updateOrCreate([
@@ -81,7 +82,7 @@ trait Follower
 
     public function hasRequestedToFollow(Model $followable): bool
     {
-        if (! in_array(\Overtrue\LaravelFollow\Traits\Followable::class, \class_uses($followable))) {
+        if (! in_array(Followable::class, \class_uses($followable))) {
             throw new InvalidArgumentException('The followable model must use the Followable trait.');
         }
 

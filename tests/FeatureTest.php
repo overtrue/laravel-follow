@@ -3,13 +3,14 @@
 namespace Tests;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use Overtrue\LaravelFollow\Events\Followed;
 use Overtrue\LaravelFollow\Events\Unfollowed;
 
 class FeatureTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -179,7 +180,7 @@ class FeatureTest extends TestCase
         $this->assertSame(0, $sqls->count());
     }
 
-    protected function getQueryLog(\Closure $callback): \Illuminate\Support\Collection
+    protected function getQueryLog(\Closure $callback): Collection
     {
         $sqls = \collect([]);
         \DB::listen(
