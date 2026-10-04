@@ -2,6 +2,4 @@
 
 namespace Overtrue\LaravelFollow\Events;
 
-class Unfollowed extends Event
-{
-}
+class Unfollowed extends Event {}
