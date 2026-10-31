@@ -2,12 +2,12 @@
 
 namespace Overtrue\LaravelFollow\Traits;
 
-use function config;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Overtrue\LaravelFollow\Traits\Follower as Follower;
+
+use function config;
 
 /**
  * @property Collection $followables
