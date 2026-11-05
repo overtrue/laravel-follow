@@ -24,7 +24,7 @@
   },
   "require-dev": {
     "mockery/mockery": "^1.6.10",
-    "phpunit/phpunit": "^12.0",
+    "phpunit/phpunit": "^12.0 || ^13.4",
     "orchestra/testbench": "^11.0",
     "brainmaestro/composer-git-hooks": "dev-master",
     "laravel/pint": "^1.29"
